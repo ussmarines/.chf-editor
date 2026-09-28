@@ -12,6 +12,8 @@ Maintain the Brain as part of normal development:
 - All Brain reads and writes go through the `brain` CLI. Never edit Brain files by hand.
 
 The `brain-setup`, `brain-page`, `brain-ingest`, and `brain-bootstrap` skills are installed globally. Prefer `brain init` to scaffold a new project.
+
+In a public fork, install those skills and run the Brain CLI's `init` subcommand before using the Brain workflow; private Brain pages are not included. See `docs/TOOLCHAIN.md`.
 <!-- END brain.md -->
 
 ## CHF project requirements

@@ -1,5 +1,7 @@
 # BRAIN.md — Project Brain protocol entry point
 
+Public forks do not include the private `brain/` pages. To use this agent workflow in a fork, install the Project Brain skills from the [official repository](https://github.com/mindmuxai/brain.md/tree/main/skills) and initialize a new local Brain with the CLI's `init` subcommand. See [tools and skills](docs/TOOLCHAIN.md). CHF Editor itself runs without Project Brain.
+
 The brain is the project's knowledge, captured as plain Markdown. **Both reads and writes go through the `brain` CLI:**
 
 - **Read = `brain` read subcommands** (`brain-dir` / `list-pages` / `read-page <id>` / `read-root <slug>`). They are location-independent — you do not need to know where the brain directory lives.

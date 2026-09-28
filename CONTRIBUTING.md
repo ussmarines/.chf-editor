@@ -1,19 +1,25 @@
 # Contributing
 
-## Local checks
+Contributions are welcome: bug reports, documentation corrections, focused code changes, and reproducible findings about the CHF format. See [tools and skills](docs/TOOLCHAIN.md) for the public dependencies and research references used by this project.
 
-The application uses Python 3 and the standard library. Its tests use `pytest`:
+## Before you contribute
 
-```powershell
-python -m pytest -q
-```
+- Read the [README](README.md), [security policy](SECURITY.md), and [license](LICENSE). The project permits noncommercial use under the PolyForm Noncommercial License 1.0.0; preserve the required notice in redistributed copies and forks.
+- Open an issue for a substantial change so its scope and evidence can be discussed before implementation.
+- Submit only work you have the right to contribute. By opening a pull request, you agree that your contribution may be distributed under this project's PolyForm Noncommercial License 1.0.0.
+- Do not submit `.chf` presets, game files or extracts, experiment manifests, screenshots, videos, credentials, email addresses, or personal machine paths. Use synthetic examples and place private local work under `outputs/`.
 
-Run checks relevant to the files you changed. The GitHub Actions workflow also checks only files changed by a pull request or push for whitespace and common private-data patterns.
+## Submit a pull request
 
-## Protect private data
+1. Create a focused branch and describe the change and why it is needed.
+2. Run checks relevant to the files you changed. For Python changes, use `python -m unittest discover -s tests -v`; tests that require private CHF inputs use `CHF_TEST_SOURCE` and `CHF_ZSTD_DLL` and may be skipped when those files are unavailable.
+3. Review the entire diff for private data and generated files before pushing.
+4. Open a pull request and state what you checked, what remains unverified, and any user-visible effect.
 
-Do not commit character presets (`.chf`), experiment manifests, game files or extracts, private images, screenshots, videos, credentials, or personal machine paths. Keep local research artifacts in the ignored `outputs/` directory. Use synthetic fixtures for tests.
+The GitHub Actions workflow checks changed paths for whitespace and common private-data patterns. It is intentionally limited to changed files to conserve CI minutes.
 
-## Pull requests
+## Evidence in reports
 
-Use a `codex/` or descriptive feature branch and explain user-visible changes, evidence, limitations, and the checks run. Do not claim that structural validation establishes game loading, game saving, or a visual effect; report those evidence states separately.
+Keep these claims separate: structural validity, in-game loading, saving by the game, and visible effect. When proposing a field mapping, provide the source and the level of proof. A label or hash alone does not establish an anatomical effect.
+
+For vulnerabilities or accidental disclosure, use the private reporting route described in [SECURITY.md](SECURITY.md).
