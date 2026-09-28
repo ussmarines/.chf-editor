@@ -33,9 +33,13 @@ jobs:
             git checkout --detach FETCH_HEAD
             paths="$(git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA")"
           else
-            git fetch --no-tags --depth=1 origin "$GITHUB_EVENT_BEFORE" "$GITHUB_SHA"
+            before="$GITHUB_EVENT_BEFORE"
+            if [[ -z "$before" ]]; then
+              before="$(git rev-parse "$GITHUB_SHA^1")"
+            fi
+            git fetch --no-tags --depth=1 origin "$before" "$GITHUB_SHA"
             git checkout --detach FETCH_HEAD
-            paths="$(git diff --name-only "$GITHUB_EVENT_BEFORE" "$GITHUB_SHA")"
+            paths="$(git diff --name-only "$before" "$GITHUB_SHA")"
           fi
           printf '%s\n' "$paths" > "$RUNNER_TEMP/changed-paths.txt"
           if [[ -n "$paths" ]]; then
@@ -47,12 +51,15 @@ jobs:
         shell: bash
         run: |
           mapfile -t paths < "$RUNNER_TEMP/changed-paths.txt"
-          base="$GITHUB_EVENT_BEFORE"
           if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
             base="$(jq -r '.pull_request.base.sha' "$GITHUB_EVENT_PATH")"
             git diff --check "$base...HEAD" -- "${paths[@]}"
           else
-            git diff --check "$base" "$GITHUB_SHA" -- "${paths[@]}"
+            before="$GITHUB_EVENT_BEFORE"
+            if [[ -z "$before" ]]; then
+              before="$(git rev-parse "$GITHUB_SHA^1")"
+            fi
+            git diff --check "$before" "$GITHUB_SHA" -- "${paths[@]}"
           fi
 
       - name: Reject private or generated artifacts in changed paths
