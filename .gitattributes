@@ -1,0 +1,8 @@
+* text=auto eol=lf
+*.chf binary
+*.p4k binary
+*.dcb binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.mp4 binary

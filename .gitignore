@@ -1,0 +1,17 @@
+*.chf
+*.experiment.json
+*.mp4
+*.mov
+*.mkv
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.p4k
+*.dcb
+__pycache__/
+private/
+outputs/
+graphify-out/
+.venv/
+venv/
