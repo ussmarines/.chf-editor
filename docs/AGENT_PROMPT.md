@@ -1,11 +1,11 @@
-# Consigne à remettre à un agent local
+# Prompt for a local agent
 
-Tu travailles dans le dépôt `.chf-editor` pour aider à créer un personnage Star Citizen à partir de ma description et, si je les fournis, d'images de référence et de captures de BioCorp. Lis `AGENTS.md`, `BRAIN.md` via son CLI, puis `docs/AGENT_WORKFLOW.md`. Ne téléverse aucun `.chf`, image ou capture et ne modifie pas les fichiers originaux.
+Work in this repository to help the user inspect or make a controlled edit to a local Star Citizen character preset. Read `AGENTS.md` and `docs/AGENT_WORKFLOW.md` first. Ask the user to select the female or male source preset if that choice is not already clear. Do not upload `.chf` files, images, or captures, and do not modify original files.
 
-1. Propose le choix entre les deux profils d'origine `default_women.chf` et `Default_men.chf`. Demande uniquement les informations encore nécessaires : profil choisi, description du personnage ou image de référence, et changements prioritaires. Si elles sont déjà dans la conversation, utilise-les.
-2. Exécute `agent-choices` sur les deux profils, puis `agent-context` sur le preset choisi avec la DLL Zstandard disponible localement. Utilise seulement les exemples BioCorp proposés pour cette base et lis `baseline_match` ; les matériaux de la base de laboratoire peuvent différer de ceux du profil d'origine. Distingue ce qui est observé en jeu de ce qui est seulement déduit de l'image ou des noms de paramètres.
-3. Propose une première itération courte et motivée, avec incertitudes. Prépare une recette `compose` dans `outputs/`, puis exporte un nouveau `.chf` sous `outputs/`. Consulte le manifeste, le diff et la relecture. Ne remplace jamais une sortie existante.
-4. Rapporte séparément : structure valide, chargement en jeu, sauvegarde par BioCorp et effet visuel. Si l'itération exige BioCorp, donne-moi les actions précises à faire ; attends mon retour et les captures avant d'affirmer une ressemblance.
-5. Conserve les SHA et la provenance de chaque itération. Arrête-toi au prochain geste que seul l'utilisateur peut faire dans le jeu, ou quand la description/image de référence manque réellement.
+1. Ask only for information that is still needed: the selected local preset, the desired change, and any reference image or in-game observation. Keep all private files on the user's machine.
+2. Use the GUI or the supported `inspect` and `diff` CLI commands to examine the chosen preset. Do not assume an `agent-context`, `agent-choices`, or recipe-composition command exists.
+3. Propose one controlled experiment with its reasons and uncertainties. Use the GUI or `variant` / `variant-param` to create a new output under `outputs/`. Never replace an existing file. Inspect the resulting manifest and logical diff.
+4. Report structural validity, in-game loading, saving by BioCorp, and visible effect separately. If the next step requires BioCorp, give the user exact steps and wait for their results before making visual claims.
+5. Preserve source files unchanged and keep any personal presets, manifests, images, and captures outside Git.
 
-Le writer prend en charge des transferts de régions ADN cataloguées et des changements bruts équilibrés ou matériels. Il ne calcule pas les paramètres CHF exacts à partir d'une image et ne produit pas encore d'aperçu 3D fidèle.
+This tool does not render a 3D character or calculate exact CHF values from an image. A visual reference can guide a hypothesis, but it does not directly determine file parameters.
