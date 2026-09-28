@@ -1,63 +1,71 @@
-# Local CHF Laboratory
+# CHF Editor
 
-A local Python GUI and command-line tool for inspecting Star Citizen `.chf` v7/v8 presets, comparing files, and creating controlled variants. Balanced DNA edits preserve the region's total weight. Material edits are limited to parameters already present in the source file.
+**Inspect, compare, and make controlled changes to Star Citizen character presets.**
 
-This tool does not render 3D characters. Structural validation does not prove that Star Citizen loads a file, that BioCorp saves it, or that a change has a visible effect.
+CHF Editor is a local Python application for `.chf` v7/v8 files. It offers a graphical interface and a command-line tool for examining a preset, comparing two saves, and creating a narrowly scoped experiment. It does not include character presets or game assets.
 
-## Privacy
+> [!IMPORTANT]
+> A structurally valid file is not proof that Star Citizen will load it, save it, or show the intended visual change. Test those outcomes separately in the game.
 
-This public repository contains no character presets, game files, screenshots, or videos. Default and custom character files, experiment manifests, and extracted game data are private and are not included. Local outputs belong under `outputs/`, which is excluded from Git. The public evidence catalog omits private file fingerprints and links to the published limitations in [the experiment notes](docs/EXPERIMENTS.md#published-evidence-catalog).
+## What you can do
 
-Before publishing changes, review the full diff for secrets, personal data, machine-specific paths, and private character data. GitHub secret scanning and push protection are enabled; the changed-file workflow also checks only files in each push or pull request. These safeguards cannot guarantee that every form of sensitive data is detected.
+| Task | Available now |
+| --- | --- |
+| Explore a preset | View its structure, DNA regions, ItemPorts, materials, and available evidence in the GUI. |
+| Compare two saves | Inspect their logical differences with the `diff` command or GUI. |
+| Test a DNA change | Change one weight and balance it with another weight in the same region. |
+| Test a material change | Change one existing float or color component with an exact source SHA-256 guard. |
+| Validate an export | Check size, CRC32C, Zstandard bounds, v7/v8 structure, and the expected logical diff; re-read the result independently. |
 
-## Requirements
+The tool preserves the original input and refuses to overwrite an existing output. It does not render characters, compose complete recipes, or infer the visual meaning of an unverified field.
 
-- Windows and Python 3. Tkinter is required for the GUI.
-- A compatible native Zstandard library (`libzstd.dll`) is required for CHF operations.
-- The test suite uses Python's standard `unittest` library.
+## Get started
 
-## Quick start
+**Requirements:** Windows, Python 3, Tkinter for the GUI, and a compatible native Zstandard DLL (`libzstd.dll`) for CHF operations. Bring your own legally obtained `.chf` files; none are distributed here.
 
 ```powershell
 git clone https://github.com/ussmarines/.chf-editor.git
 cd .chf-editor
-python -m unittest discover -s tests -v
 python gui.py
 ```
 
-In the GUI, browse for the Zstandard DLL and open local female and male presets. The application provides six tabs: Overview, DNA, ItemPorts, Materials, Diff, and Evidence. The Evidence tab shows available mappings and their limits. No game folder or machine-specific path is assumed.
+In the GUI, select your Zstandard DLL and browse for local presets. The tabs cover **Overview**, **DNA**, **ItemPorts**, **Materials**, **Diff**, and **Evidence**. No game installation path is built into the application.
 
-## Command-line examples
+### Command-line examples
 
-Every CHF command accepts `--zstd-dll` with the path to your library:
+Set the DLL path once in your PowerShell session:
 
 ```powershell
 $dll = 'C:\path\to\libzstd.dll'
 python chf.py --zstd-dll $dll inspect 'C:\presets\character.chf'
 python chf.py --zstd-dll $dll diff 'C:\presets\before.chf' 'C:\presets\after.chf'
-python chf.py --zstd-dll $dll variant 'C:\presets\default_women.chf' 'C:\outputs\nose-test.chf' --part Nose --slot 0 --balance-slot 1 --value 12000 --game-version 'LIVE build' --control 'manual Nose weight experiment'
 ```
 
-`variant` changes two balanced DNA weights in one region. `variant-param` changes one existing material value and requires the current source SHA-256 plus the field indices and hash. The CLI supports `inspect`, `diff`, `variant`, and `variant-param`; it does not provide an agent automation or recipe-composition command. Commands refuse to overwrite existing outputs and create an experiment manifest.
+Create a single controlled DNA experiment:
 
-The reader checks the fixed file size, CRC32C, decompression limits, v7/v8 structure, and payload consumption. Exports are re-read and their logical diff is checked. Always keep original files unchanged.
+```powershell
+python chf.py --zstd-dll $dll variant 'C:\presets\source.chf' 'C:\presets\nose-test.chf' --part Nose --slot 0 --balance-slot 1 --value 12000 --game-version 'LIVE build' --control 'manual Nose weight experiment'
+```
 
-The tests that exercise CHF read/write operations require local paths in `CHF_TEST_SOURCE` and `CHF_ZSTD_DLL`. Private presets and the Zstandard library are not included. Tests that do not need those files still run normally.
+The CLI also provides `variant-param` for one existing material value. Run `python chf.py variant-param --help` for its required source hash, field indices, and value options. Every export includes an experiment manifest; keep it with your local test files.
 
-## Evidence and in-game checks
+## Evidence and safety
 
-Report these separately: structural validity, in-game loading, saving by the game, and observed visual effect. Field names and observations from one preset do not establish the same effect on another. BioCorp checks require in-game validation and comparable captures.
+Report four results independently: **file structure**, **loading in the game**, **saving by the game**, and **visible effect**. A field name or a result from one preset does not establish the same behavior for another preset.
 
-- [Controlled in-game pair protocol](docs/CONTROLLED_GAME_PAIR.md)
-- [Experiment workflow and evidence limits](docs/EXPERIMENTS.md)
-- [Agent workflow](docs/AGENT_WORKFLOW.md)
-- [Security policy](SECURITY.md)
-- [Contribution guide](CONTRIBUTING.md)
+Keep presets, manifests, screenshots, videos, and extracted game files private. Store local experiments under `outputs/`, which Git excludes. Review your changes before opening a pull request; automated checks look for common sensitive patterns in changed files but cannot detect everything.
 
-## License
+| Guide | Purpose |
+| --- | --- |
+| [Controlled game comparison](docs/CONTROLLED_GAME_PAIR.md) | Make comparable before/after saves and captures. |
+| [Experiments and evidence](docs/EXPERIMENTS.md) | Understand the published evidence and its limits. |
+| [Agent workflow](docs/AGENT_WORKFLOW.md) | Run bounded experiments with clear provenance. |
+| [Security policy](SECURITY.md) | Report vulnerabilities privately. |
 
-The source code is licensed under the [PolyForm Noncommercial License 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0). Commercial use is prohibited; copies and modified derivatives may only be used and distributed for permitted noncommercial purposes under its terms. Forks and redistributed copies must preserve the copyright and attribution notice in [`LICENSE`](LICENSE). Public repositories can be forked through GitHub's service; the license governs permitted use and redistribution of the code.
+## Contribute
 
-## Support
+Contributions are welcome. Open an issue for a proposal or submit a pull request with a focused change, relevant checks, and a clear description of evidence and limitations. Read the [contribution guide](CONTRIBUTING.md) before submitting. Please do not include private character files or personal data.
 
-[Support this project via PayPal](https://paypal.me/ussmarinesdot)
+## License and support
+
+The code is available under the [PolyForm Noncommercial License 1.0.0](LICENSE). Contributions and forks must respect its noncommercial terms and preserve the required copyright and attribution notice. You may support the project through [PayPal](https://paypal.me/ussmarinesdot).
