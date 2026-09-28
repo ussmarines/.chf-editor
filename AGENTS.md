@@ -27,3 +27,4 @@ In a public fork, install those skills and run the Brain CLI's `init` subcommand
 - Phase 1 is understanding and controlled validation of parameters. Do not start a complete out-of-game character creator until the user explicitly approves that phase.
 - Run targeted tests for both new female/male presets when those presets are part of the authorized local work. Historical scripts under `research/space-shooter/` are an archive, not the main writer.
 - For library, API, or CLI questions, consult Context7 first. Graphify may help navigate local code; do not install a hook or watcher without an explicit need.
+- For CHF editing or research, use the project-local `.agents/skills/chf-editor/SKILL.md` and, for a bounded file edit, `.agents/skills/chf-structural-variant/SKILL.md`.

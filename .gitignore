@@ -9,6 +9,10 @@
 *.webp
 *.p4k
 *.dcb
+*.zip
+*.7z
+*.rar
+*.pdf
 __pycache__/
 private/
 outputs/

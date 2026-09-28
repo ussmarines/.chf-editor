@@ -2,6 +2,8 @@
 
 Contributions are welcome: bug reports, documentation corrections, focused code changes, and reproducible findings about the CHF format. See [tools and skills](docs/TOOLCHAIN.md) for the public dependencies and research references used by this project.
 
+For CHF changes, read the [format notes](docs/CHF_FORMAT.md) and [controlled editing workflow](docs/CHF_EDITING_WORKFLOW.md). Project-local skills under `.agents/skills/` provide the same starting points for compatible coding agents.
+
 ## Before you contribute
 
 - Read the [README](README.md), [security policy](SECURITY.md), and [license](LICENSE). The project permits noncommercial use under the PolyForm Noncommercial License 1.0.0; preserve the required notice in redistributed copies and forks.
