@@ -17,12 +17,6 @@ jobs:
     name: Changed file hygiene
     runs-on: ubuntu-latest
     steps:
-      - name: Check out the proposed revision
-        uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-          fetch-depth: 0
-
       - name: Select changed paths
         id: paths
         shell: bash
