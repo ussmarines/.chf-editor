@@ -60,6 +60,7 @@ Keep presets, manifests, screenshots, videos, and extracted game files private. 
 | [Controlled game comparison](docs/CONTROLLED_GAME_PAIR.md) | Make comparable before/after saves and captures. |
 | [Experiments and evidence](docs/EXPERIMENTS.md) | Understand the published evidence and its limits. |
 | [Agent workflow](docs/AGENT_WORKFLOW.md) | Run bounded experiments with clear provenance. |
+| [Tools and skills](docs/TOOLCHAIN.md) | Find official sources and set up a fork. |
 | [Security policy](SECURITY.md) | Report vulnerabilities privately. |
 
 ## Contribute

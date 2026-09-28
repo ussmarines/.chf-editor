@@ -1,0 +1,43 @@
+# Tools, sources, and agent skills
+
+This page lists the public tools and source projects referenced by CHF Editor. A fork contains the Python application, its tests, documentation, and GitHub configuration. The external projects below are linked to their original Git repositories; no third-party binaries, game data, private presets, or private research files are bundled.
+
+## Run the application
+
+| Tool | Role | Official source | Needed by a fork? |
+| --- | --- | --- | --- |
+| Python 3 | Runs `gui.py`, `chf.py`, and the standard-library test suite. Tkinter is part of compatible Python installations. | [python/cpython](https://github.com/python/cpython) | Yes. Check that `python -m tkinter` opens a window before using the GUI. |
+| Zstandard (`libzstd.dll`) | Reads and writes the compressed CHF payload through the native library. | [facebook/zstd](https://github.com/facebook/zstd) | Yes for CHF operations. Supply a compatible Windows DLL yourself and select it in the GUI or pass `--zstd-dll` to the CLI. |
+| Git | Clones the repository and manages contributions. | [git/git](https://github.com/git/git) | Needed to clone or contribute; not needed to run an already downloaded copy. |
+
+There is no pip dependency manifest. The application uses Python's standard library plus a locally supplied native Zstandard library. The tests use `unittest`; private file based tests need local `CHF_TEST_SOURCE` and `CHF_ZSTD_DLL` values. See the [README](../README.md) for usage.
+
+## Research references
+
+These projects informed the field and format research. They are **not runtime dependencies** and are not bundled with this repository.
+
+| Project | Official repository | Source revision documented here |
+| --- | --- | --- |
+| StarBreaker | [diogotr7/StarBreaker](https://github.com/diogotr7/StarBreaker) | [`08302fbdd3a1cc704a0bc0977fb1841927a637bf`](https://github.com/diogotr7/StarBreaker/commit/08302fbdd3a1cc704a0bc0977fb1841927a637bf) |
+| StarChar | [diogotr7/starchar](https://github.com/diogotr7/starchar) | [`2c4bace845a4004c78b50a7ed902a725545aa5e7`](https://github.com/diogotr7/starchar/commit/2c4bace845a4004c78b50a7ed902a725545aa5e7) |
+
+Use the upstream repositories' own licenses if you download or reuse their code. A source revision is separate from the version of any binary you run. Their labels and names do not, by themselves, prove a visual or anatomical effect in Star Citizen.
+
+## Optional agent workflow
+
+None of the agent tools below are required to run CHF Editor. They are not included in the public package, so a fork owner can choose and install them independently.
+
+| Tool or skill | Why it appears in this project | Official repository |
+| --- | --- | --- |
+| OpenAI Codex | Agent instructions for contributors live in `AGENTS.md`. | [openai/codex](https://github.com/openai/codex) |
+| Project Brain skills: `brain-setup`, `brain-page`, `brain-ingest`, `brain-bootstrap` | `BRAIN.md`, `AGENTS.md`, and `CLAUDE.md` describe this optional persistent decision workflow. The `brain-page` skill supplies the `brain` CLI. | [mindmuxai/brain.md](https://github.com/mindmuxai/brain.md/tree/main/skills) |
+| Context7 MCP | Agent instruction to consult current library and API documentation. | [upstash/context7](https://github.com/upstash/context7) |
+| Graphify | Optional local code navigation; no hook or watcher is installed by this repository. | [Graphify-Labs/graphify](https://github.com/Graphify-Labs/graphify) |
+
+The public repository intentionally omits the local `brain/` pages because they contain private experiment provenance. To use Project Brain in a fork, obtain the skills from the upstream repository, then run `node <brain-page-skill>/bin/brain.mjs init` from your fork's root and create your own pages. The application works without this agent workflow.
+
+## GitHub features in a fork
+
+The fork inherits [`.github/dependabot.yml`](../.github/dependabot.yml) for monthly GitHub Actions version update checks and the [changed-file workflow](../.github/workflows/changed-files.yml). That workflow runs on pull requests and `main` pushes, checking changed paths only to conserve Actions minutes. GitHub account settings, branch protection, security features, and repository-level Actions permissions may need to be enabled separately by the fork owner. Use the [GitHub documentation](https://github.com/github/docs) for those settings.
+
+The [funding file](../.github/FUNDING.yml) points to the original project's PayPal page. Fork owners should review that link for their own repository. The copyright and attribution notice in [`LICENSE`](../LICENSE) must be retained when the code is redistributed under its terms.

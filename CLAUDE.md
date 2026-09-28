@@ -13,4 +13,6 @@ Maintain the brain as part of normal coding work — not as a separate task. Whi
 - All reads and writes go through the `brain` CLI — never hand-edit brain files.
 
 The brain skills (`brain-setup`, `brain-page`, `brain-ingest`, `brain-bootstrap`) are installed in your global skills directory. Prefer `brain init` to scaffold a new project.
+
+In a public fork, install those skills and run the Brain CLI's `init` subcommand before using the Brain workflow; private Brain pages are not included. See `docs/TOOLCHAIN.md`.
 <!-- END brain.md -->

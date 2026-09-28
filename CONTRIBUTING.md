@@ -1,6 +1,6 @@
 # Contributing
 
-Contributions are welcome: bug reports, documentation corrections, focused code changes, and reproducible findings about the CHF format.
+Contributions are welcome: bug reports, documentation corrections, focused code changes, and reproducible findings about the CHF format. See [tools and skills](docs/TOOLCHAIN.md) for the public dependencies and research references used by this project.
 
 ## Before you contribute
 
