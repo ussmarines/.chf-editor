@@ -21,12 +21,20 @@ jobs:
         id: paths
         shell: bash
         run: |
+          git init .
+          git remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
           if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
             base="$(jq -r '.pull_request.base.sha' "$GITHUB_EVENT_PATH")"
+            git fetch --no-tags --depth=1 origin "$base" "$GITHUB_SHA"
+            git checkout --detach FETCH_HEAD
             paths="$(git diff --name-only "$base...HEAD")"
           elif [[ "$GITHUB_EVENT_BEFORE" =~ ^0+$ ]]; then
+            git fetch --no-tags --depth=1 origin "$GITHUB_SHA"
+            git checkout --detach FETCH_HEAD
             paths="$(git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA")"
           else
+            git fetch --no-tags --depth=1 origin "$GITHUB_EVENT_BEFORE" "$GITHUB_SHA"
+            git checkout --detach FETCH_HEAD
             paths="$(git diff --name-only "$GITHUB_EVENT_BEFORE" "$GITHUB_SHA")"
           fi
           printf '%s\n' "$paths" > "$RUNNER_TEMP/changed-paths.txt"
