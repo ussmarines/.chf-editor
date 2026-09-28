@@ -1,0 +1,86 @@
+name: Changed files
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: changed-files-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  hygiene:
+    name: Changed file hygiene
+    runs-on: ubuntu-latest
+    steps:
+      - name: Select changed paths
+        id: paths
+        shell: bash
+        run: |
+          git init .
+          git remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
+          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+            base="$(jq -r '.pull_request.base.sha' "$GITHUB_EVENT_PATH")"
+            git fetch --no-tags --depth=1 origin "$base" "$GITHUB_SHA"
+            git checkout --detach FETCH_HEAD
+            paths="$(git diff --name-only "$base...HEAD")"
+          elif [[ "$GITHUB_EVENT_BEFORE" =~ ^0+$ ]]; then
+            git fetch --no-tags --depth=1 origin "$GITHUB_SHA"
+            git checkout --detach FETCH_HEAD
+            paths="$(git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA")"
+          else
+            git fetch --no-tags --depth=1 origin "$GITHUB_EVENT_BEFORE" "$GITHUB_SHA"
+            git checkout --detach FETCH_HEAD
+            paths="$(git diff --name-only "$GITHUB_EVENT_BEFORE" "$GITHUB_SHA")"
+          fi
+          printf '%s\n' "$paths" > "$RUNNER_TEMP/changed-paths.txt"
+          if [[ -n "$paths" ]]; then
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check whitespace in changed files
+        if: steps.paths.outputs.has_changes == 'true'
+        shell: bash
+        run: |
+          mapfile -t paths < "$RUNNER_TEMP/changed-paths.txt"
+          base="$GITHUB_EVENT_BEFORE"
+          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+            base="$(jq -r '.pull_request.base.sha' "$GITHUB_EVENT_PATH")"
+            git diff --check "$base...HEAD" -- "${paths[@]}"
+          else
+            git diff --check "$base" "$GITHUB_SHA" -- "${paths[@]}"
+          fi
+
+      - name: Reject private or generated artifacts in changed paths
+        if: steps.paths.outputs.has_changes == 'true'
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          import sys
+
+          paths = [Path(line) for line in Path(__import__("os").environ["RUNNER_TEMP"], "changed-paths.txt").read_text().splitlines() if line]
+          forbidden_suffixes = {".chf", ".experiment.json", ".mp4", ".mov", ".mkv", ".png", ".jpg", ".jpeg", ".webp", ".p4k", ".dcb"}
+          forbidden_parts = {"outputs", "private", "graphify-out", "__pycache__", ".venv", "venv"}
+          failures = []
+          for path in paths:
+              if any(part.lower() in forbidden_parts for part in path.parts) or path.suffix.lower() in forbidden_suffixes:
+                  failures.append(f"private/generated path: {path}")
+                  continue
+              if path.is_file() and path.stat().st_size <= 2_000_000:
+                  try:
+                      content = path.read_text(encoding="utf-8")
+                  except (UnicodeError, OSError):
+                      continue
+                  if "@" in content and "users.noreply.github.com" in content:
+                      failures.append(f"commit identity marker in {path}")
+          if failures:
+              print("\n".join(failures), file=sys.stderr)
+              sys.exit(1)
+          print(f"Checked {len(paths)} changed paths")
+          PY
