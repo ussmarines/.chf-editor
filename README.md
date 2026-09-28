@@ -1,58 +1,63 @@
-# Laboratoire local CHF
+# Local CHF Laboratory
 
-Éditeur local et CLI Python pour inspecter des presets Star Citizen `.chf` v7/v8, comparer deux fichiers et produire des variantes contrôlées. Les modifications ADN équilibrées préservent la somme des poids de la région. Les modifications de matériaux sont limitées aux paramètres déjà présents dans le fichier.
+A local Python GUI and command-line tool for inspecting Star Citizen `.chf` v7/v8 presets, comparing files, and creating controlled variants. Balanced DNA edits preserve the region's total weight. Material edits are limited to parameters already present in the source file.
 
-Le programme ne rend pas de personnage en 3D. Une validation structurelle ne prouve ni le chargement par Star Citizen, ni une sauvegarde par BioCorp, ni un effet visuel.
+This tool does not render 3D characters. Structural validation does not prove that Star Citizen loads a file, that BioCorp saves it, or that a change has a visible effect.
 
-## Confidentialité
+## Privacy
 
-Ce dépôt public ne contient aucun preset de personnage, fichier du jeu, capture ou vidéo. Les profils par défaut, personnages personnalisés, expériences et données extraites du jeu restent privés. Les sorties locales sont conservées sous `outputs/`, exclu de Git.
+This public repository contains no character presets, game files, screenshots, or videos. Default and custom character files, experiment manifests, and extracted game data are private and are not included. Local outputs belong under `outputs/`, which is excluded from Git. The public evidence catalog omits private file fingerprints and links to the published limitations in [the experiment notes](docs/EXPERIMENTS.md#published-evidence-catalog).
 
-## Prérequis et démarrage
+Before publishing changes, review the full diff for secrets, personal data, machine-specific paths, and private character data. GitHub secret scanning and push protection are enabled; the changed-file workflow also checks only files in each push or pull request. These safeguards cannot guarantee that every form of sensitive data is detected.
 
-- Windows et Python 3 ; Tkinter pour l’interface graphique.
-- Une bibliothèque native Zstandard compatible (`libzstd.dll`) pour les commandes CLI.
-- `pytest` pour exécuter les tests.
+## Requirements
+
+- Windows and Python 3. Tkinter is required for the GUI.
+- A compatible native Zstandard library (`libzstd.dll`) is required for CHF operations.
+- The test suite uses Python's standard `unittest` library.
+
+## Quick start
 
 ```powershell
 git clone https://github.com/ussmarines/.chf-editor.git
 cd .chf-editor
-python -m pytest -q
+python -m unittest discover -s tests -v
 python gui.py
 ```
 
-Dans l’interface, sélectionner la DLL Zstandard et ouvrir un preset local. L’application fournit sept onglets : résumé, ADN, ItemPorts, matériaux, diff, preuves et composition. Les sources et limites des mappings sont affichées dans l’onglet **Preuves**.
+In the GUI, browse for the Zstandard DLL and open local female and male presets. The application provides six tabs: Overview, DNA, ItemPorts, Materials, Diff, and Evidence. The Evidence tab shows available mappings and their limits. No game folder or machine-specific path is assumed.
 
-## CLI
+## Command-line examples
 
-Toutes les commandes prennent `--zstd-dll` avec le chemin de votre DLL. Exemples :
-
-```powershell
-$py = 'python'
-$dll = 'C:\chemin\vers\libzstd.dll'
-& $py chf.py --zstd-dll $dll inspect 'C:\presets\personnage.chf'
-& $py chf.py --zstd-dll $dll diff 'C:\presets\avant.chf' 'C:\presets\apres.chf'
-& $py chf.py --zstd-dll $dll agent-choices 'C:\presets\default_women.chf' 'C:\presets\Default_men.chf'
-```
-
-`variant` modifie deux poids ADN compensés dans une région. `variant-param` modifie une valeur matérielle déjà présente. `compose` applique une recette de changements distincts à une source dont le SHA-256 est fixé. Les commandes refusent d’écraser leurs sorties et créent un manifeste d’expérience.
-
-Le lecteur vérifie la taille fixe, le CRC32C, les limites de décompression, la structure v7/v8 et la consommation du payload. L’export est relu et son diff logique contrôlé. Préserver séparément les fichiers originaux.
-
-## Preuves et essais en jeu
-
-Pour chaque résultat, distinguer la structure valide, le chargement en jeu, la sauvegarde par le jeu et l’effet visuel observé. Les noms de champs issus des sources et les correspondances observées sur un preset ne garantissent pas le même effet sur un autre personnage. Les essais demandant BioCorp restent à valider dans le jeu avec des captures comparables.
-
-Voir [le protocole de paire contrôlée](docs/CONTROLLED_GAME_PAIR.md), [les expériences](docs/EXPERIMENTS.md), [le workflow agent](docs/AGENT_WORKFLOW.md) et [la politique de sécurité](SECURITY.md).
-
-## Tests
+Every CHF command accepts `--zstd-dll` with the path to your library:
 
 ```powershell
-python -m unittest discover -s tests -v
+$dll = 'C:\path\to\libzstd.dll'
+python chf.py --zstd-dll $dll inspect 'C:\presets\character.chf'
+python chf.py --zstd-dll $dll diff 'C:\presets\before.chf' 'C:\presets\after.chf'
+python chf.py --zstd-dll $dll variant 'C:\presets\default_women.chf' 'C:\outputs\nose-test.chf' --part Nose --slot 0 --balance-slot 1 --value 12000 --game-version 'LIVE build' --control 'manual Nose weight experiment'
 ```
 
-Les tests du writer nécessitent un preset CHF local et une DLL Zstandard ; ces fichiers privés ne sont pas inclus dans le dépôt.
+`variant` changes two balanced DNA weights in one region. `variant-param` changes one existing material value and requires the current source SHA-256 plus the field indices and hash. The CLI supports `inspect`, `diff`, `variant`, and `variant-param`; it does not provide an agent automation or recipe-composition command. Commands refuse to overwrite existing outputs and create an experiment manifest.
 
-## Soutenir le projet
+The reader checks the fixed file size, CRC32C, decompression limits, v7/v8 structure, and payload consumption. Exports are re-read and their logical diff is checked. Always keep original files unchanged.
 
-[Faire un don via PayPal](https://paypal.me/ussmarinesdot)
+The tests that exercise CHF read/write operations require local paths in `CHF_TEST_SOURCE` and `CHF_ZSTD_DLL`. Private presets and the Zstandard library are not included. Tests that do not need those files still run normally.
+
+## Evidence and in-game checks
+
+Report these separately: structural validity, in-game loading, saving by the game, and observed visual effect. Field names and observations from one preset do not establish the same effect on another. BioCorp checks require in-game validation and comparable captures.
+
+- [Controlled in-game pair protocol](docs/CONTROLLED_GAME_PAIR.md)
+- [Experiment workflow and evidence limits](docs/EXPERIMENTS.md)
+- [Agent workflow](docs/AGENT_WORKFLOW.md)
+- [Security policy](SECURITY.md)
+- [Contribution guide](CONTRIBUTING.md)
+
+## License
+
+The source code is licensed under the [PolyForm Noncommercial License 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0). Commercial use is prohibited; copies and modified derivatives may only be used and distributed for permitted noncommercial purposes under its terms. Forks and redistributed copies must preserve the copyright and attribution notice in [`LICENSE`](LICENSE). Public repositories can be forked through GitHub's service; the license governs permitted use and redistribution of the code.
+
+## Support
+
+[Support this project via PayPal](https://paypal.me/ussmarinesdot)

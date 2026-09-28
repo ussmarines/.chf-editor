@@ -1,63 +1,75 @@
 [
   {
     "id": "female-nose-tip-ui",
-    "control": "DNA > contrôle sans nom à la pointe du nez",
-    "effect": "narines plus larges et nez plus aplati après le geste complet, puis forme conservée au rechargement, selon l'utilisateur",
-    "level": "paire BioCorp à un seul geste ; quatre poids et deux head_id de Nose changent ensemble ; rôle individuel inconnu ; pas de captures comparables",
+    "control": "DNA > unnamed marker at the nose tip",
+    "effect": "User reported wider nostrils and a flatter nose after the gesture; the shape remained after reload.",
+    "level": "One-control BioCorp pair; four weights and two head_id values changed together; individual roles are unknown; no comparable captures.",
     "build": "LIVE 4.10.193.11644",
-    "reference_sha256": "65c3fa90cb1d8655e2b1209ae5053f7e7e2151225f04f67f3beb35e77076ca70",
-    "additional_tested_sha256": ["96cf3f6ed084a0ec90f0ad92d3860c2fd98b7c1bfa7cf7d6c73831fe3597aad5"],
-    "selector": {"region": "Nose", "body_guid": "ad4cb0ef944a79d053c2d3b4582538ad", "gender_hash": "54ebf49e", "variant_hash": "6e5bd869"},
-    "source": "docs/GAME_TEST_2026-09-27.md#dna--nez--geste-sur-la-pointe"
+    "selector": {
+      "region": "Nose",
+      "body_guid": "ad4cb0ef944a79d053c2d3b4582538ad",
+      "gender_hash": "54ebf49e",
+      "variant_hash": "6e5bd869"
+    },
+    "source": "docs/EXPERIMENTS.md#published-evidence-catalog"
   },
   {
     "id": "female-nose-balanced-weights",
-    "control": "Variante expérimentale : Nose slots 0 +10000 et 3 -10000",
-    "effect": "différence nette de forme du nez selon l'utilisateur ; détail anatomique inconnu",
-    "level": "deux poids compensés, head_id intacts ; chargement et réenregistrement BioCorp conservant les poids ; pas de captures comparables ni rechargement de la copie du jeu",
+    "control": "Experimental variant: Nose slots 0 +10000 and 3 -10000",
+    "effect": "User reported a clear change in nose shape; the anatomical detail is unknown.",
+    "level": "Two balanced weights with head_id unchanged; BioCorp loaded and re-saved the weights; no comparable captures or reload of the game-saved copy.",
     "build": "LIVE 4.10.193.11644",
-    "reference_sha256": "65c3fa90cb1d8655e2b1209ae5053f7e7e2151225f04f67f3beb35e77076ca70",
-    "additional_tested_sha256": [
-      "801a61b9495febf33844ac919032b55ce43925ed1359722153840a2eeab38d66",
-      "6b4847de0a5b2e48e237df354a0f2b00c4361f04c9a1cd6433504a1562bd2fcd"
-    ],
-    "selector": {"region": "Nose", "body_guid": "ad4cb0ef944a79d053c2d3b4582538ad", "gender_hash": "54ebf49e", "variant_hash": "6e5bd869"},
-    "source": "docs/GAME_TEST_2026-09-27.md#variante-synthétique-dna02--effet-visible-des-poids-équilibrés"
+    "selector": {
+      "region": "Nose",
+      "body_guid": "ad4cb0ef944a79d053c2d3b4582538ad",
+      "gender_hash": "54ebf49e",
+      "variant_hash": "6e5bd869"
+    },
+    "source": "docs/EXPERIMENTS.md#published-evidence-catalog"
   },
   {
     "id": "female-lower-lip-ui",
-    "control": "DNA > contrôle sans nom sur la lèvre inférieure",
-    "effect": "changement de forme de la lèvre inférieure déclaré et retrouvé après rechargement ; détail visuel non décrit",
-    "level": "paire BioCorp à un seul geste ; quatre poids et quatre head_id de Mouth changent ensemble ; rôle individuel inconnu ; pas de captures comparables",
+    "control": "DNA > unnamed lower-lip marker",
+    "effect": "User reported a lower-lip shape change that remained after reload; visual detail was not described.",
+    "level": "One-control BioCorp pair; four weights and four head_id values in Mouth changed together; individual roles are unknown; no comparable captures.",
     "build": "LIVE 4.10.193.11644",
-    "reference_sha256": "afb94d4de0dcf56b3d07fd9593f2bc4a5ad2f286510fad13d4344cf035fbe27e",
-    "additional_tested_sha256": ["8baace51a92835477ec9888994ad2e86d2a3b8074bc2864ad0d7c6b0a189efb6"],
-    "selector": {"region": "Mouth", "body_guid": "ad4cb0ef944a79d053c2d3b4582538ad", "gender_hash": "54ebf49e", "variant_hash": "6e5bd869"},
-    "source": "docs/GAME_TEST_2026-09-27.md#dna--bouche--geste-sur-la-lèvre-inférieure"
+    "selector": {
+      "region": "Mouth",
+      "body_guid": "ad4cb0ef944a79d053c2d3b4582538ad",
+      "gender_hash": "54ebf49e",
+      "variant_hash": "6e5bd869"
+    },
+    "source": "docs/EXPERIMENTS.md#published-evidence-catalog"
   },
   {
     "id": "female-mouth-balanced-weights",
-    "control": "Variante expérimentale : Mouth slots 1 +10000 et 2 -10000",
-    "effect": "aucune différence nette de bouche ou lèvres signalée par l'utilisateur",
-    "level": "deux poids compensés, head_id intacts ; chargement et réenregistrement BioCorp conservant les poids ; pas de captures comparables",
+    "control": "Experimental variant: Mouth slots 1 +10000 and 2 -10000",
+    "effect": "User reported no clear visible difference in the mouth or lips.",
+    "level": "Two balanced weights with head_id unchanged; BioCorp loaded and re-saved the weights; no comparable captures.",
     "build": "LIVE 4.10.193.11644",
-    "reference_sha256": "afb94d4de0dcf56b3d07fd9593f2bc4a5ad2f286510fad13d4344cf035fbe27e",
-    "additional_tested_sha256": [
-      "9c96e7250ed7e2aa9ac2b96521cdcc7249aa9c87f971314a4e1a4c0f77397386",
-      "320d8ac838967ade855667a4f5a2b46b4a50aa8644d43f2be21c91a920fbb90f"
-    ],
-    "selector": {"region": "Mouth", "body_guid": "ad4cb0ef944a79d053c2d3b4582538ad", "gender_hash": "54ebf49e", "variant_hash": "6e5bd869"},
-    "source": "docs/GAME_TEST_2026-09-27.md#variante-synthétique-mouth02--chargée-sans-différence-nette"
+    "selector": {
+      "region": "Mouth",
+      "body_guid": "ad4cb0ef944a79d053c2d3b4582538ad",
+      "gender_hash": "54ebf49e",
+      "variant_hash": "6e5bd869"
+    },
+    "source": "docs/EXPERIMENTS.md#published-evidence-catalog"
   },
   {
     "id": "female-eye-linked-ui",
-    "control": "DNA > marqueur intérieur de l'œil situé à gauche de l'écran",
-    "effect": "les deux marqueurs d'œil bougent ensemble selon l'utilisateur ; aucune différence nette de forme après rechargement",
-    "level": "paire BioCorp à un seul geste ; EyeLeft et EyeRight écrits de façon identique, chacun avec quatre poids et quatre head_id modifiés ; état d'une option miroir inconnu ; pas de captures comparables",
+    "control": "DNA > inner eye marker on the left side of the screen",
+    "effect": "User reported both eye markers moving together; no clear shape difference was noticed after reload.",
+    "level": "One-control BioCorp pair; EyeLeft and EyeRight were written identically, with four weights and four head_id values changed in each; mirror option state unknown; no comparable captures.",
     "build": "LIVE 4.10.193.11644",
-    "reference_sha256": "f4e591d4436d8d770189edd7eab28eb0c381f0da6d267a5a909d2932e7fbf1b3",
-    "additional_tested_sha256": ["3b622248ee9e0dd38b8ee8b731d670081104697fcbce1cdeb238f121054769db"],
-    "selector": {"regions": ["EyeLeft", "EyeRight"], "body_guid": "ad4cb0ef944a79d053c2d3b4582538ad", "gender_hash": "54ebf49e", "variant_hash": "6e5bd869"},
-    "source": "docs/GAME_TEST_2026-09-27.md#dna--yeux--marqueur-intérieur-à-gauche-de-lécran"
+    "selector": {
+      "regions": [
+        "EyeLeft",
+        "EyeRight"
+      ],
+      "body_guid": "ad4cb0ef944a79d053c2d3b4582538ad",
+      "gender_hash": "54ebf49e",
+      "variant_hash": "6e5bd869"
+    },
+    "source": "docs/EXPERIMENTS.md#published-evidence-catalog"
   }
 ]

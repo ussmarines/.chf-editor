@@ -1,17 +1,17 @@
-# Première paire contrôlée à produire dans Star Citizen
+# First controlled pair in Star Citizen
 
-But : relier **un contrôle visible** à son diff CHF sur le build LIVE `4.10.193.11644`, sans déduire un effet d'un nom de hash. Les deux `default_*.chf` reçus restent des références intactes.
+Goal: connect **one visible control** to its CHF diff on a recorded LIVE build without inferring an effect from a hash name. Keep both `default_*.chf` source files unchanged.
 
-## Opérations dans le jeu
+## In-game steps
 
-1. Copier `default_women.chf` vers un dossier de sauvegarde **hors du jeu** et relever son SHA-256. Laisser l'original intact.
-2. Dans le créateur BioCorp, charger ce personnage. Sans changer de contrôle, enregistrer une nouvelle copie nommée `lab_woman_00_baseline.chf`.
-3. Choisir **un seul** curseur au nom lisible, de préférence `Freckles Amount` si l'interface le propose. Noter son onglet, sa valeur avant et sa valeur après. Déplacer ce seul curseur vers une valeur nettement différente, sans changer coiffure, couleur, ADN ou autre option. Enregistrer une seconde copie `lab_woman_01_one_control.chf`.
-4. Faire deux captures comparables : même angle, même zoom, même éclairage, une de chaque état. Noter si les deux fichiers se rechargent et si la sauvegarde reste possible.
-5. Fournir les chemins des deux `.chf`, les captures et le nom/valeurs du contrôle. Les fichiers n'ont pas à être placés dans Git ; un dossier local privé suffit.
+1. Copy `default_women.chf` to a private backup folder **outside the game directory** and record its SHA-256. Keep the original unchanged.
+2. Load the character in BioCorp. Without changing any control, save a new copy named `lab_woman_00_baseline.chf`.
+3. Choose **one** clearly named slider, preferably `Freckles Amount` if available. Record its tab and before/after values. Change only this slider by a noticeable amount; do not change the hairstyle, color, DNA, or any other option. Save a second copy named `lab_woman_01_one_control.chf`.
+4. Capture both states at a matching angle, zoom, and lighting. Record whether both files reload and whether saving succeeds.
+5. Provide the local paths to the two `.chf` files, the captures, and the control name and values. The files can stay in a private local folder; they do not belong in Git.
 
-## Ce que le laboratoire fera ensuite
+## What the laboratory checks
 
-`chf.py diff` contrôlera CRC, Zstandard, structure v8 et toutes les différences logiques. Si la sauvegarde du jeu modifie aussi d'autres champs (normalisation, timestamps, équipement), la paire restera **ambiguë** et une répétition sera nécessaire. Un effet visible et un diff simple permettront de promouvoir le mapping au niveau « confirmé pour ce build ». Le même protocole sera ensuite répété sur le personnage masculin et les autres familles de contrôles.
+`chf.py diff` checks the CRC, Zstandard payload, v8 structure, and all logical differences. If the game save also changes other fields (normalization, timestamps, equipment), the pair remains **ambiguous** and should be repeated. A visible effect and a simple diff can support a mapping as “confirmed for this build.” Repeat the protocol for the male profile and other control families before generalizing.
 
-La vidéo précédente prouve les options et effets qu'elle montre à l'écran ; elle ne contient pas ces deux sauvegardes isolées. Les variantes `+1` de `outputs/` passent seulement le contrôle structurel, pas le gate de chargement.
+Detailed game captures and experiment files are private and intentionally omitted from this public repository. Public evidence summaries and their limits are in [the experiment notes](EXPERIMENTS.md#published-evidence-catalog).

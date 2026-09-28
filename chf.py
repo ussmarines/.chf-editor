@@ -72,7 +72,7 @@ def publish_candidate(source, output, dll, before, raw, payload, wanted, change,
         "output": str(output), "output_sha256": reread["sha256"],
         "game_version": game_version, "control": control, "change": change,
         "structured_diff": changes, "structural_validation": "PASS",
-        "game_load": "not tested", "screenshots": [], "visual_verdict": "non testé",
+        "game_load": "not tested", "screenshots": [], "visual_verdict": "not tested",
     }
     output.with_suffix(".experiment.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
