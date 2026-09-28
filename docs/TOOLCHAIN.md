@@ -34,6 +34,10 @@ None of the agent tools below are required to run CHF Editor. They are not inclu
 | Context7 MCP | Agent instruction to consult current library and API documentation. | [upstash/context7](https://github.com/upstash/context7) |
 | Graphify | Optional local code navigation; no hook or watcher is installed by this repository. | [Graphify-Labs/graphify](https://github.com/Graphify-Labs/graphify) |
 
+The fork **does** include two project-local skills: [`chf-editor`](../.agents/skills/chf-editor/SKILL.md) for navigation and [`chf-structural-variant`](../.agents/skills/chf-structural-variant/SKILL.md) for bounded edits. Their source and scope are documented in [the archive integration note](STARFALL_ARCHIVE_IMPORT.md). Install an agent that understands project-local `SKILL.md` files if you want to invoke them; the Python application does not depend on an agent.
+
+Get a compatible native Zstandard library from the [official Zstandard source and releases](https://github.com/facebook/zstd/releases). Supply its DLL path explicitly; this repository does not download or bundle third-party binaries. No Python framework or pip package is needed for the current application.
+
 The public repository intentionally omits the local `brain/` pages because they contain private experiment provenance. To use Project Brain in a fork, obtain the skills from the upstream repository, then run `node <brain-page-skill>/bin/brain.mjs init` from your fork's root and create your own pages. The application works without this agent workflow.
 
 ## GitHub features in a fork

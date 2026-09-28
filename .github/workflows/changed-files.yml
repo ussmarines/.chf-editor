@@ -82,7 +82,7 @@ jobs:
           import sys
 
           paths = [Path(line) for line in Path(__import__("os").environ["RUNNER_TEMP"], "changed-paths.txt").read_text().splitlines() if line]
-          forbidden_suffixes = {".chf", ".mp4", ".mov", ".mkv", ".avi", ".webm", ".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tif", ".tiff", ".webp", ".exr", ".p4k", ".dcb"}
+          forbidden_suffixes = {".chf", ".mp4", ".mov", ".mkv", ".avi", ".webm", ".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tif", ".tiff", ".webp", ".exr", ".p4k", ".dcb", ".zip", ".7z", ".rar", ".pdf"}
           forbidden_parts = {"outputs", "private", "graphify-out", "__pycache__", ".venv", "venv"}
           failures = []
           for path in paths:
@@ -99,6 +99,10 @@ jobs:
               try:
                   content = path.read_text(encoding="utf-8")
               except (UnicodeError, OSError):
+                  failures.append(f"changed file is not readable UTF-8 text: {path}")
+                  continue
+              if "\x00" in content:
+                  failures.append(f"binary content in changed file: {path}")
                   continue
               if re.search(r"\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b", content, re.IGNORECASE):
                   failures.append(f"email address in {path}")
