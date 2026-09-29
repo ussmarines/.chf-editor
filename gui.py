@@ -215,7 +215,8 @@ class App(tk.Tk):
                 return
             result = variant(source, Path(name), Path(self.dll.get()), self.part.get(),
                              self.slot.get(), int(self.value.get()), self.balance_slot.get(),
-                             self.version.get(), self.control.get())
+                             self.version.get(), self.control.get(),
+                             self.records[self.active]["sha256"])
             self._show(self.diff, result["structured_diff"])
             self.tabs.select(4)
             messagebox.showinfo("Structural export validated", f"{result['output_sha256']}\nIn-game test: not tested")

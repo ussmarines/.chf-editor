@@ -4,7 +4,6 @@ import ctypes
 import hashlib
 import json
 import math
-import os
 from pathlib import Path
 import struct
 import tempfile
@@ -16,7 +15,7 @@ def digest(data):
     return hashlib.sha256(data).hexdigest()
 
 
-def zstd_compress(payload, dll_path):
+def zstd_compress(payload, dll_path, level=1):
     lib = ctypes.CDLL(str(dll_path))
     lib.ZSTD_compressBound.argtypes = (ctypes.c_size_t,)
     lib.ZSTD_compressBound.restype = ctypes.c_size_t
@@ -27,7 +26,7 @@ def zstd_compress(payload, dll_path):
     capacity = lib.ZSTD_compressBound(len(payload))
     out = ctypes.create_string_buffer(capacity)
     source = ctypes.create_string_buffer(payload)
-    size = lib.ZSTD_compress(out, capacity, source, len(payload), 1)
+    size = lib.ZSTD_compress(out, capacity, source, len(payload), level)
     if lib.ZSTD_isError(size):
         raise ValueError("Zstandard compression failed")
     return out.raw[:size]
@@ -39,11 +38,17 @@ def inspect_file(path, dll):
 
 def publish_candidate(source, output, dll, before, raw, payload, wanted, change, game_version, control):
     compressed_size = struct.unpack_from("<I", raw, 8)[0]
-    compressed = zstd_compress(bytes(payload), dll)
     old_end = 16 + compressed_size
-    new_end = 16 + len(compressed)
-    if new_end > 4096 or (new_end > old_end and any(raw[old_end:new_end])):
+    compressed = None
+    for level in (1, 3, 6, 9, 12, 15, 19, 22):
+        attempt = zstd_compress(bytes(payload), dll, level)
+        end = 16 + len(attempt)
+        if end <= 4096 and (end <= old_end or not any(raw[old_end:end])):
+            compressed = attempt
+            break
+    if compressed is None:
         raise ValueError("compressed stream exceeds container or overlaps opaque bytes")
+    new_end = 16 + len(compressed)
     candidate = bytearray(raw)
     candidate[16:new_end] = compressed
     if new_end < old_end:
@@ -52,6 +57,9 @@ def publish_candidate(source, output, dll, before, raw, payload, wanted, change,
     struct.pack_into("<I", candidate, 4, crc32c(candidate[16:]))
     if candidate[:4] != raw[:4] or candidate[-8:] != raw[-8:]:
         raise ValueError("opaque header or trailer changed")
+    manifest_path = output.with_suffix(".experiment.json")
+    if output.exists() or manifest_path.exists():
+        raise ValueError("output or experiment manifest already exists")
     output.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(dir=output.parent) as temporary:
         staged = Path(temporary) / "candidate.chf"
@@ -62,11 +70,9 @@ def publish_candidate(source, output, dll, before, raw, payload, wanted, change,
         expected_paths = [wanted] if isinstance(wanted, str) else wanted
         if sorted(entry["path"] for entry in logical) != sorted(expected_paths):
             raise ValueError(f"unexpected logical diff: {logical}")
-        os.replace(staged, output)
-    reread = inspect_file(output, dll)
-    if reread["sha256"] != digest(bytes(candidate)) or structural_diff(before, reread) != changes:
-        output.unlink()
-        raise ValueError("independent output reread failed")
+        reread = inspect_file(staged, dll)
+        if reread["sha256"] != digest(bytes(candidate)) or structural_diff(before, reread) != changes:
+            raise ValueError("independent output reread failed")
     manifest = {
         "schema": 1, "source": str(source), "source_sha256": before["sha256"],
         "output": str(output), "output_sha256": reread["sha256"],
@@ -74,12 +80,30 @@ def publish_candidate(source, output, dll, before, raw, payload, wanted, change,
         "structured_diff": changes, "structural_validation": "PASS",
         "game_load": "not tested", "screenshots": [], "visual_verdict": "not tested",
     }
-    output.with_suffix(".experiment.json").write_text(
-        json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+    manifest_data = json.dumps(manifest, ensure_ascii=False, indent=2).encode("utf-8")
+    created_output = False
+    created_manifest = False
+    try:
+        with output.open("xb") as file:
+            created_output = True
+            file.write(candidate)
+        published = inspect_file(output, dll)
+        if published["sha256"] != reread["sha256"] or structural_diff(before, published) != changes:
+            raise ValueError("independent output reread failed")
+        with manifest_path.open("xb") as file:
+            created_manifest = True
+            file.write(manifest_data)
+    except (OSError, ValueError):
+        if created_manifest:
+            manifest_path.unlink()
+        if created_output:
+            output.unlink()
+        raise
     return manifest
 
 
-def variant(source, output, dll, part, slot, value, balance_slot, game_version, control):
+def variant(source, output, dll, part, slot, value, balance_slot, game_version, control,
+            expected_source_sha256=None):
     source = source.resolve()
     output = output.resolve()
     if source == output or output.exists():
@@ -87,7 +111,11 @@ def variant(source, output, dll, part, slot, value, balance_slot, game_version, 
     if not 0 <= value <= 65535 or not 0 <= slot < 4 or not 0 <= balance_slot < 4 or slot == balance_slot:
         raise ValueError("value must be 0..65535; slot and balance slot must differ and be 0..3")
     before = inspect_file(source, dll)
+    if expected_source_sha256 and before["sha256"].lower() != expected_source_sha256.lower():
+        raise ValueError("source SHA-256 changed")
     raw = source.read_bytes()
+    if digest(raw) != before["sha256"]:
+        raise ValueError("source changed during inspection")
     compressed_size, payload_size = struct.unpack_from("<II", raw, 8)
     payload = bytearray(decompress(raw[16:16 + compressed_size], payload_size, dll))
     parts = before["dna"]["parts"]
@@ -143,6 +171,8 @@ def variant_param(source, output, dll, expected_source_sha256, material_index,
     if entry["name_hash"].lower() != name_hash.lower():
         raise ValueError("selected parameter hash does not match")
     raw = source.read_bytes()
+    if digest(raw) != before["sha256"]:
+        raise ValueError("source changed during inspection")
     compressed_size, payload_size = struct.unpack_from("<II", raw, 8)
     payload = bytearray(decompress(raw[16:16 + compressed_size], payload_size, dll))
     offset = entry["payload_offset"]

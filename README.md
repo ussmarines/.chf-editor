@@ -60,6 +60,8 @@ Keep presets, manifests, screenshots, videos, and extracted game files private. 
 | [Controlled game comparison](docs/CONTROLLED_GAME_PAIR.md) | Make comparable before/after saves and captures. |
 | [CHF format](docs/CHF_FORMAT.md) | Understand the supported v7/v8 container and payload. |
 | [Editing workflow](docs/CHF_EDITING_WORKFLOW.md) | Preserve a source, make one change, and validate each result. |
+| [Architecture](docs/ARCHITECTURE.md) | See the reader, evidence catalog, writer, and GUI boundaries. |
+| [Remaining work](docs/NEXT_STEPS.md) | Follow the phase-one validation and mapping priorities. |
 | [Experiments and evidence](docs/EXPERIMENTS.md) | Understand the published evidence and its limits. |
 | [Agent workflow](docs/AGENT_WORKFLOW.md) | Run bounded experiments with clear provenance. |
 | [Tools and skills](docs/TOOLCHAIN.md) | Find official sources and set up a fork. |
