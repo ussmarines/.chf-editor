@@ -62,6 +62,15 @@ class ChfCliTest(unittest.TestCase):
             self.assertEqual(source.read_bytes(), before_bytes)
             self.assertNotEqual(self.cli(*args).returncode, 0)
             self.assertEqual(target.read_bytes().__len__(), 4096)
+            self.assertTrue(target.with_suffix(".experiment.json").exists())
+            blocked = Path(directory) / "manifest_taken.chf"
+            blocked_manifest = blocked.with_suffix(".experiment.json")
+            blocked_manifest.write_text("existing record", encoding="utf-8")
+            blocked_args = list(args)
+            blocked_args[blocked_args.index(target)] = blocked
+            self.assertNotEqual(self.cli(*blocked_args).returncode, 0)
+            self.assertFalse(blocked.exists())
+            self.assertEqual(blocked_manifest.read_text(encoding="utf-8"), "existing record")
             invalid = Path(directory) / "invalid.chf"
             invalid_args = list(args)
             invalid_args[invalid_args.index(target)] = invalid
