@@ -5,6 +5,8 @@ from pathlib import Path
 import tempfile
 import unittest
 from unittest.mock import patch
+from unittest.mock import Mock
+from types import SimpleNamespace
 
 from chf import variant_param
 from chflab.inspector import inspect
@@ -127,6 +129,13 @@ class MonitorTest(unittest.TestCase):
 
 
 class ScreenMetricTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        try:
+            import PIL
+        except ImportError:
+            raise unittest.SkipTest('Optional Pillow dependency is not installed')
+
     def test_pixel_metric_is_not_an_anatomical_verdict(self):
         try:
             from PIL import Image
@@ -159,5 +168,55 @@ class ScreenMetricTest(unittest.TestCase):
         from chflab.screen import capture_game
         with patch('chflab.screen.game_window', return_value=123):
             with patch.object(ImageGrab, 'grab', return_value=Image.new('RGB', (4, 4))):
-                with self.assertRaisesRegex(ValueError, 'Empty/uniform'):
+                with patch('chflab.screen.visible_game_frame', return_value=Image.new('RGB', (4, 4))):
+                    with self.assertRaisesRegex(ValueError, 'empty/uniform'):
+                        capture_game()
+
+    def test_black_window_falls_back_to_game_area_and_records_method(self):
+        from PIL import Image, ImageGrab
+        from chflab.screen import capture_game
+        rendered = Image.new('RGB', (4, 4))
+        rendered.putpixel((1, 1), (255, 255, 255))
+        with patch('chflab.screen.game_window', return_value=123):
+            with patch.object(ImageGrab, 'grab', return_value=Image.new('RGB', (4, 4))):
+                with patch('chflab.screen.visible_game_frame', return_value=rendered) as fallback:
+                    result = capture_game()
+                    fallback.assert_called_once_with(123)
+                    self.assertEqual(result.info['capture_method'], 'visible_game_area')
+
+    def test_focus_switch_discards_a_captured_image(self):
+        from PIL import Image, ImageGrab
+        from chflab.screen import capture_game
+        rendered = Image.new('RGB', (4, 4))
+        rendered.putpixel((1, 1), (255, 255, 255))
+        with patch('chflab.screen.game_window', side_effect=[123, 456]):
+            with patch.object(ImageGrab, 'grab', return_value=rendered):
+                with self.assertRaisesRegex(ValueError, 'discarded'):
                     capture_game()
+
+    def test_visible_capture_restores_dpi_and_checks_focus_without_native_calls(self):
+        from PIL import Image, ImageGrab
+        from chflab.screen import visible_game_frame
+        user = SimpleNamespace(SetThreadDpiAwarenessContext=Mock(return_value=17))
+        with patch('chflab.screen.ctypes.WinDLL', return_value=user, create=True):
+            with patch('chflab.screen.client_box', return_value=(-100, 20, 100, 220)):
+                with patch('chflab.screen.game_window', side_effect=[123, 456]):
+                    with patch.object(ImageGrab, 'grab', return_value=Image.new('RGB', (200, 200))) as grab:
+                        with self.assertRaisesRegex(ValueError, 'discarded'):
+                            visible_game_frame(123)
+                        grab.assert_called_once_with(bbox=(-100, 20, 100, 220), all_screens=True)
+        self.assertEqual(user.SetThreadDpiAwarenessContext.call_args.args, (17,))
+
+    def test_gesture_sequence_is_local_ordered_and_not_marker_validation(self):
+        from PIL import Image
+        from chflab.monitor_gui import MonitorWindow
+        frame = Image.new('RGB', (4, 4), 'red')
+        frame.info['capture_method'] = 'visible_game_area'
+        with tempfile.TemporaryDirectory() as tmp:
+            MonitorWindow.save_sequence(Path(tmp), 1,
+                [('2026-10-07T14:00:01+00:00', frame), ('2026-10-07T14:00:02+00:00', frame)])
+            folder = Path(tmp)/'0001-sequence'
+            index = json.loads((folder/'index.json').read_text())
+            self.assertEqual([entry['file'] for entry in index['frames']], ['00.jpg', '01.jpg'])
+            self.assertEqual(index['marker_identification'], 'not performed')
+            self.assertTrue((folder/'00.jpg').is_file())

@@ -40,7 +40,12 @@ The optional `--preset`, `--zstd-dll` and `--game-build` arguments prefill setup
 Enable the capture checkbox before starting and keep **Star Citizen in the
 foreground**. The application samples that game's window approximately once per
 second, displays a whole-window pixel-change metric, and stores before/after PNGs
-only alongside detected save events. Captures are local and resized to fit
+only alongside detected save events. A bounded in-memory buffer also keeps the
+last ten successful captures. Each detected save archives the buffered frames
+since the previous save in `NNNN-sequence/`, as JPEG quality 90 with a timestamped
+`index.json`. This can show the gesture leading up to the file diff; it is not a
+continuous video stream to an agent or automatic marker recognition. Long gaps
+or gestures between samples may be absent. Captures are local and resized to fit
 1920 x 1080. The first successful capture or the previous saved capture provides
 the before image; it is not synchronized with slider movements. Wait for an active
 capture before the first gesture. No image is sent to an external service.
@@ -49,8 +54,14 @@ The capture verifies the foreground executable is `StarCitizen.exe` using the
 [Windows foreground-window API](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getforegroundwindow)
 and process identity, then uses
 [Pillow's HWND capture](https://github.com/python-pillow/Pillow/blob/12.1.0/docs/releasenotes/11.2.1.rst).
-It does not capture another foreground application as a fallback. Windowed or
-borderless mode may be required if the graphics surface yields blank captures.
+If direct window capture is blank or fails, the application instead captures the
+visible game client area, with physical-pixel coordinates and multi-monitor
+support. Foreground identity and window position are checked around that capture;
+focus/position changes discard the result. It does not switch to another
+foreground application. Keep the game unobscured: overlays within the game area
+may appear in this fallback. The UI and save records identify `window` versus
+`visible_game_area`. Capture errors and recoveries are recorded locally in
+`capture-log.jsonl`, and the save's screen record includes its exact error.
 Captured pixels include menus, animation, view changes and lighting: the metric
 is not a face-shape measurement, OCR, slider identification or visual validation.
 

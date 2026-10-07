@@ -1,6 +1,8 @@
 """One local monitoring session per window; main GUI remains usable."""
 import json
+from datetime import datetime, timezone
 from concurrent.futures import ThreadPoolExecutor
+from collections import deque
 from pathlib import Path
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
@@ -19,8 +21,12 @@ class MonitorWindow(tk.Toplevel):
         self.timer = None
         self.worker = ThreadPoolExecutor(max_workers=1)
         self.future = None
+        self.sequence_jobs = []
+        self.frames = deque(maxlen=10)
+        self.sequence_cutoff = None
         self.screen_before = None
         self.last_frame = None
+        self.last_screen_error = None
         self.path = tk.StringVar(value=(parent.female if parent.active == 'female' else parent.male).get())
         self.control = tk.StringVar()
         self.build = tk.StringVar(value=parent.version.get())
@@ -65,6 +71,9 @@ class MonitorWindow(tk.Toplevel):
                 Path(__file__).resolve().parents[1] / 'outputs' / 'monitor',
                 self.control.get(), self.build.get(), self.folder_mode.get())
             self.screen_before = self.last_frame = None
+            self.last_screen_error = None
+            self.frames.clear()
+            self.sequence_cutoff = None
             self.capture_enabled = self.capture.get()
             self.status.set(f"Surveillance : {self.monitor.control} — session {self.monitor.session}")
             self._tick()
@@ -76,6 +85,13 @@ class MonitorWindow(tk.Toplevel):
         if not self.monitor or (not self.monitor.active and self.future is None):
             return
         try:
+            pending_jobs = []
+            for job in self.sequence_jobs:
+                if job.done():
+                    job.result()
+                else:
+                    pending_jobs.append(job)
+            self.sequence_jobs = pending_jobs
             if self.future is None:
                 self.future = self.worker.submit(self.sample, self.monitor, self.capture_enabled)
             if not self.future.done():
@@ -88,15 +104,29 @@ class MonitorWindow(tk.Toplevel):
                 return
             if screen_error:
                 self.screen_status.set(f'Capture indisponible : {screen_error}')
+            if screen_error != self.last_screen_error:
+                with (self.monitor.session / 'capture-log.jsonl').open('a', encoding='utf-8') as log:
+                    log.write(json.dumps({'time_utc': datetime.now(timezone.utc).isoformat(),
+                        'status': 'unavailable' if screen_error else 'recovered',
+                        'error': screen_error}, ensure_ascii=False) + '\n')
+                self.last_screen_error = screen_error
             if frame is not None:
+                self.frames.append((frame.info.get('capture_time_utc', datetime.now(timezone.utc).isoformat()), frame))
                 metric = pixel_change(self.last_frame, frame) if self.last_frame is not None else None
-                self.screen_status.set(f'Capture locale active — variation globale {metric if metric is not None else "—"} % (inclut interface, animation et éclairage)')
+                method = frame.info.get('capture_method', 'unknown')
+                self.screen_status.set(f'Capture locale active ({method}) — variation globale {metric if metric is not None else "—"} % (inclut interface, animation et éclairage)')
                 self.last_frame = frame
                 if self.screen_before is None:
                     self.screen_before = frame
             for event in events:
                 if 'sequence' in event:
-                    capture_record = {'status': 'unavailable', 'visual_validation': 'not confirmed'}
+                    frames = [(stamp, image) for stamp, image in self.frames
+                              if self.sequence_cutoff is None or stamp > self.sequence_cutoff]
+                    self.sequence_jobs.append(self.worker.submit(self.save_sequence, self.monitor.session,
+                        event['sequence'], frames))
+                    self.sequence_cutoff = event['time_utc']
+                    capture_record = {'status': 'unavailable' if self.capture_enabled else 'disabled',
+                                      'error': screen_error, 'visual_validation': 'not confirmed'}
                     if frame is not None:
                         seq = event['sequence']
                         after_name = f'{seq:04d}-screen-after.png'
@@ -107,6 +137,7 @@ class MonitorWindow(tk.Toplevel):
                             self.screen_before.save(self.monitor.session / before_name)
                         capture_record.update({'status': 'captured after file detection', 'before': before_name,
                             'after': after_name, 'max_size': [1920, 1080],
+                            'capture_method': frame.info.get('capture_method', 'unknown'),
                             'whole_window_pixel_change_percent': pixel_change(self.screen_before, frame) if before_name else None,
                             'timing': 'first successful session capture or previous saved capture; not synchronized to slider gesture'})
                         self.screen_before = frame
@@ -127,6 +158,22 @@ class MonitorWindow(tk.Toplevel):
         except (OSError, ValueError, RuntimeError) as error:
             self.stop()
             self.status.set(f'Surveillance arrêtée : {error}')
+
+    @staticmethod
+    def save_sequence(session, sequence, frames):
+        folder = session / f'{sequence:04d}-sequence'
+        folder.mkdir(exist_ok=False)
+        entries = []
+        for index, (stamp, frame) in enumerate(frames):
+            name = f'{index:02d}.jpg'
+            frame.save(folder / name, quality=90)
+            entries.append({'file': name, 'capture_time_utc': stamp,
+                            'capture_method': frame.info.get('capture_method', 'unknown')})
+        with (folder / 'index.json').open('x', encoding='utf-8') as handle:
+            json.dump({'frames': entries, 'encoding': 'JPEG quality 90; resized capture',
+                'limit': 10, 'cadence': 'approximately one per second; actual timestamps recorded',
+                'marker_identification': 'not performed', 'visual_validation': 'not confirmed'},
+                handle, ensure_ascii=False, indent=2)
 
     @staticmethod
     def sample(monitor, capture_enabled):
@@ -150,5 +197,6 @@ class MonitorWindow(tk.Toplevel):
 
     def close(self):
         self.stop()
-        self.worker.shutdown(wait=False, cancel_futures=True)
+        # Finish already queued evidence writes; stopped monitors schedule no captures.
+        self.worker.shutdown(wait=False, cancel_futures=False)
         self.destroy()

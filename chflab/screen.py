@@ -1,5 +1,6 @@
 """Opt-in local game-window capture; no OCR, uploads or visual-validation claims."""
 import ctypes
+from datetime import datetime, timezone
 from ctypes import wintypes
 from pathlib import Path
 import sys
@@ -44,11 +45,65 @@ def capture_game():
         from PIL import ImageGrab
     except ImportError as error:
         raise ValueError('Install the optional requirements-monitor.txt in this Python environment') from error
-    frame = ImageGrab.grab(window=game_window()).convert('RGB')
-    if not frame.width or not frame.height or all(lo == hi for lo, hi in frame.getextrema()):
-        raise ValueError('Empty/uniform game capture; try windowed or borderless mode')
+    hwnd = game_window()
+    method = 'window'
+    try:
+        frame = ImageGrab.grab(window=hwnd).convert('RGB')
+    except (OSError, RuntimeError):
+        frame = None
+    if not usable_frame(frame):
+        # Rendered graphics may not be available through the window capture API.
+        frame = visible_game_frame(hwnd)
+        method = 'visible_game_area'
+    if game_window() != hwnd:
+        raise ValueError('Foreground window changed during capture; image discarded')
+    if not usable_frame(frame):
+        raise ValueError('Window and visible-area captures are empty/uniform; keep BioCorp visible and retry')
     frame.thumbnail((1920, 1080))
+    frame.info['capture_method'] = method
+    frame.info['capture_time_utc'] = datetime.now(timezone.utc).isoformat()
     return frame
+
+
+def usable_frame(frame):
+    return (frame is not None and frame.width > 0 and frame.height > 0
+            and not all(lo == hi for lo, hi in frame.getextrema()))
+
+
+def client_box(hwnd, user):
+    user.GetClientRect.argtypes = (wintypes.HWND, ctypes.POINTER(wintypes.RECT))
+    user.GetClientRect.restype = wintypes.BOOL
+    user.ClientToScreen.argtypes = (wintypes.HWND, ctypes.POINTER(wintypes.POINT))
+    user.ClientToScreen.restype = wintypes.BOOL
+    user.IsIconic.argtypes = (wintypes.HWND,)
+    user.IsIconic.restype = wintypes.BOOL
+    rect = wintypes.RECT()
+    origin = wintypes.POINT(0, 0)
+    if user.IsIconic(hwnd) or not user.GetClientRect(hwnd, ctypes.byref(rect)) or not user.ClientToScreen(hwnd, ctypes.byref(origin)):
+        raise ValueError('Cannot locate the visible game client area')
+    if rect.right <= 0 or rect.bottom <= 0:
+        raise ValueError('Game client area is empty')
+    return (origin.x, origin.y, origin.x + rect.right, origin.y + rect.bottom)
+
+
+def visible_game_frame(hwnd):
+    from PIL import ImageGrab
+    user = ctypes.WinDLL('user32', use_last_error=True)
+    user.SetThreadDpiAwarenessContext.argtypes = (wintypes.HANDLE,)
+    user.SetThreadDpiAwarenessContext.restype = wintypes.HANDLE
+    previous = user.SetThreadDpiAwarenessContext(ctypes.c_void_p(-4))
+    if not previous:
+        raise ValueError('Cannot enable physical-pixel coordinates for game capture')
+    try:
+        if game_window() != hwnd:
+            raise ValueError('Game lost foreground before visible-area capture')
+        box = client_box(hwnd, user)
+        frame = ImageGrab.grab(bbox=box, all_screens=True).convert('RGB')
+        if game_window() != hwnd or client_box(hwnd, user) != box:
+            raise ValueError('Game focus or position changed during capture; image discarded')
+        return frame
+    finally:
+        user.SetThreadDpiAwarenessContext(previous)
 
 
 def pixel_change(before, after):

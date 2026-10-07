@@ -333,6 +333,7 @@ if __name__ == "__main__":
     parser.add_argument('--preset', help='prefill the female file chooser; gender is not inferred')
     parser.add_argument('--zstd-dll', help='prefill the native library path')
     parser.add_argument('--game-build', help='prefill the reported game build')
+    parser.add_argument('--control', help='prefill the user-reported monitoring control')
     args = parser.parse_args()
     if args.capture and not args.monitor:
         parser.error('--capture requires --monitor')
@@ -346,4 +347,6 @@ if __name__ == "__main__":
     if args.monitor:
         monitor_window = MonitorWindow(app)
         monitor_window.capture.set(args.capture)
+        if args.control:
+            monitor_window.control.set(args.control)
     app.mainloop()
