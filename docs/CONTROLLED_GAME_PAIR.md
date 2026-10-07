@@ -10,8 +10,20 @@ Goal: connect **one visible control** to its CHF diff on a recorded LIVE build w
 4. Capture both states at a matching angle, zoom, and lighting. Record whether both files reload and whether saving succeeds.
 5. Provide the local paths to the two `.chf` files, the captures, and the control name and values. The files can stay in a private local folder; they do not belong in Git.
 
+Refresh the measured sub-tab after every load before reading a percentage;
+Hair > Color can display the previous character's values. A final group-state
+reload does not prove each intermediate pair file was separately reloaded.
+For binary variants, authenticate the game-saved file and compare the target
+value before recording retention; reload the saved copy as a separate test.
+
 ## What the laboratory checks
 
 `chf.py diff` checks the CRC, Zstandard payload, v8 structure, and all logical differences. If the game save also changes other fields (normalization, timestamps, equipment), the pair remains **ambiguous** and should be repeated. A visible effect and a simple diff can support a mapping as “confirmed for this build.” Repeat the protocol for the male profile and other control families before generalizing.
 
 Detailed game captures and experiment files are private and intentionally omitted from this public repository. Public evidence summaries and their limits are in [the experiment notes](EXPERIMENTS.md#published-evidence-catalog).
+
+The [current validation snapshot](VALIDATION_STATUS.md) distinguishes the
+generic-reference UI pairs from the twelve exact prepared variants tested on
+2026-10-07. Reuse their scoped evidence without generalizing to another preset.
+Optional [save monitoring](SAVE_MONITOR.md) records candidate associations and
+bounded captures; it does not recognize the gesture or validate its effect.

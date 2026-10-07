@@ -4,12 +4,13 @@ The local tool already inspects and compares CHF v7/v8 files and exports narrow 
 
 [Save monitoring](SAVE_MONITOR.md) now automates stable-save snapshots, field diffs
 and user-labelled candidate associations, with optional local foreground-game
-captures. Actual game-window capture remains to be verified on the target machine;
-pixel variation does not identify a slider or validate anatomy.
+captures. An owner-driven retest confirmed the visible-game-area fallback for
+that session; general graphics-mode compatibility remains unverified. Pixel
+variation does not identify a slider or validate anatomy.
 
 The [2026-10-07 offline revalidation](MAPPING_REVALIDATION.md) authenticated historical pairs and captures, added two bounded dye-color observations, and documented provenance gaps. The remaining priorities below concern new game evidence and wider scope; repeating an archive inspection cannot supply those results.
 
-The [validation status](VALIDATION_STATUS.md) now distinguishes UI mapping, loading, saving and visual results for every catalog observation. Guided material filters and separate status labels are implemented, as are Zstandard environment/Python-location detection and a native roundtrip check. The accepted installed presets have been identified under renamed filenames. New game observations and a broader set of proven controls remain pending; phase two is deferred.
+The [validation status](VALIDATION_STATUS.md) distinguishes UI mapping, loading, saving and visual results. The catalog now has 14 unique material selectors and five DNA observations. Eight skin UI/save pairs were collected across female/male generic references. All twelve prepared variants loaded and saved with their target values retained; those saved copies have not been reloaded. Both hair BaseMelanin variants visibly changed the tested reference; several skin and Nose effects remain inconclusive. Guided material filters and separate status labels, Zstandard detection and the native roundtrip check are implemented. Phase two is deferred.
 
 Owner acceptance of the six positive screenshot-backed material effects is
 **closed as VALIDATED** on 2026-10-07. Do not request the same visual approval
@@ -18,7 +19,7 @@ The priorities below concern new candidates, missing evidence and wider scope.
 The optional [REA investigation skill](REA_REVIEW.md) supplies an evidence method;
 it is not a CHF parser, an anatomy oracle or a replacement for BioCorp tests.
 
-1. **Validate each new candidate in the target game build.** Record four separate outcomes: structural validity, BioCorp loading, BioCorp saving, and visible effect. Include the build, source and output hashes, and comparable captures in private records. Existing results from another candidate or build do not transfer automatically.
+1. **Complete saved-copy reloads and unresolved visual tests.** Reload the twelve saved variants separately and verify retained values with refreshed panels. Isolate skin Amount effects with a nonzero companion opacity, and obtain comparable views for balanced Nose weights. Preserve separate structural, loading, saving and visual verdicts. New candidates/builds require their own tests; existing results do not transfer automatically.
 2. **Collect controlled saves for more UI controls.** Save a baseline and a second file after exactly one gesture. Inspect the logical diff. If several fields change, document the group and isolate individual roles through another controlled experiment. Repeat on female and male presets where the claim is meant to cover both.
 3. **Grow the evidence catalog only within proven scope.** Record source revisions, game build, structural selector, observed effect, and unresolved ambiguity. Keep private CHF files and captures out of Git.
 4. **Improve guided editing from confirmed mappings.** Add user-facing controls only when their limits, context, load behavior, and save behavior have been shown. Revisit easier Zstandard setup and modularizing the writer when a real user flow requires it.

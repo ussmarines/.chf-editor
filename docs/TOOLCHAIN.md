@@ -10,7 +10,7 @@ This page lists the public tools and source projects referenced by CHF Editor. A
 | Zstandard (`libzstd.dll`) | Reads and writes the compressed CHF payload through the native library. | [facebook/zstd](https://github.com/facebook/zstd) | Yes for CHF operations. Supply a compatible Windows DLL yourself and select it in the GUI or pass `--zstd-dll` to the CLI. |
 | Git | Clones the repository and manages contributions. | [git/git](https://github.com/git/git) | Needed to clone or contribute; not needed to run an already downloaded copy. |
 
-There is no pip dependency manifest. The application uses Python's standard library plus a locally supplied native Zstandard library. The tests use `unittest`; private file based tests need local `CHF_TEST_SOURCE` and `CHF_ZSTD_DLL` values. See the [README](../README.md) for usage.
+Core CHF operations have no pip dependency manifest: they use Python's standard library plus a locally supplied native Zstandard library. Optional window captures have the pinned `requirements-monitor.txt` manifest described below. The tests use `unittest`; private file based tests need local `CHF_TEST_SOURCE` and `CHF_ZSTD_DLL` values. See the [README](../README.md) for usage.
 
 ## Research references
 
@@ -42,6 +42,12 @@ Core inspection, editing and save monitoring use the standard library. Optional
 local game-window screenshots require Pillow, pinned in
 [`requirements-monitor.txt`](../requirements-monitor.txt). See
 [monitor setup and capture limitations](SAVE_MONITOR.md).
+
+An owner-driven 2026-10-07 monitor retest authenticated captured BioCorp images
+and a before/after save pair using the visible-game-area fallback. This is a
+scoped capture success, not general graphics-mode compatibility or automatic UI
+recognition. Native character-editor input used for the separate validation
+suite belongs to the agent session; CHF Editor does not bundle an input driver.
 
 Alternatively, set `CHF_ZSTD_DLL` once in your shell and omit `--zstd-dll`. The GUI's **Detect / check** button checks required exports and a real compression/decompression roundtrip, and displays the loaded library version. Detection searches the environment and standard Python executable/DLL/library locations; it does not recursively scan the computer or install a library. An invalid explicit or environment path is rejected rather than silently replaced. The version function and compression API are documented in the [official Zstandard manual](https://facebook.github.io/zstd/zstd_manual.html); Tkinter selection handling follows the [Python ttk documentation](https://docs.python.org/3/library/tkinter.ttk.html).
 

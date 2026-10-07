@@ -2,6 +2,14 @@
 
 This review rechecked private archived CHF files, experiment records, game-saved copies and captures on 2026-10-07. It did not run Star Citizen or establish compatibility with a newer build. Historical game observations below concern LIVE 4.10.193.11644 / BioCorp 01.05.03.
 
+This page preserves that offline review's chronology and counts. Later native
+UI/save pairs, exact prepared-variant tests and the current 14 material selectors
+are recorded in [validation status](VALIDATION_STATUS.md) and
+[experiment summaries](EXPERIMENTS.md#published-evidence-catalog). The catalog
+still has five DNA observations and six historical owner-accepted material
+effects. Subsequent target-retention observations do not retroactively change
+the archived claims or establish saved-copy reloads.
+
 ## Validation summary
 
 The review inspected 217 archived CHF files successfully and examined 36 experiment manifests. Thirty historical CHF hash references and 18 historical capture hash references were matched to archived artifacts. The three documented female UI pairs for Nose, Mouth and linked EyeLeft/EyeRight were authenticated against historical records and their logical diffs recomputed.

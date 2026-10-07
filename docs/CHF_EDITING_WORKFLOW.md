@@ -29,6 +29,14 @@ A new compression result may have different compressed bytes or size despite an 
 
 Record these separately: preset detection, loading, editor stability, game saving, and visible effect. For visual comparison, use similar lighting and front, three-quarter, and profile views. Reopen the relevant editor panel after loading each preset before trusting its displayed value. Keep game-saved outputs and captures private under `outputs/` or outside the repository.
 
+Compare the exact target in the authenticated game save to establish retention;
+then reload that saved copy for a separate reload verdict. Observing a variant
+load and save does not prove its saved copy was reloaded. BioCorp can normalize
+unrelated data: compare textures by their index rather than list ordinal when
+entries are inserted, and compare normalization against a no-gesture baseline
+save. Whole-file equality is not required for target retention, but unrelated
+changes must be explained and recorded. See the [current scoped observations](VALIDATION_STATUS.md).
+
 Promote a file as a reusable game-tested base only after it loads, remains editable, and saves successfully in the documented build. If a variant crashes or corrupts the appearance, return to the last known working base and inspect only the bounded diff. Structural success does not imply a visual or game verdict.
 
 ## 5. Preserve a reproducible record

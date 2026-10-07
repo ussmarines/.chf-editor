@@ -11,6 +11,17 @@ CHF Editor runs locally. Its supported workflow has four layers:
 
 The CLI is both a user entry point and the current writer module. Keeping the GUI on that writer avoids two independent export rules. Research references and private experiments do not enter the runtime path. `outputs/` is ignored by Git and holds local presets, manifests, and captures.
 
+The optional [save monitor](SAVE_MONITOR.md) observes stable local CHF saves,
+archives before/after files and candidate diffs, and can retain a bounded local
+game-window capture sequence. It does not write the watched preset, infer UI
+gestures, automate game input or promote evidence automatically. Pillow is an
+optional capture dependency; file monitoring uses the standard library.
+
+The current [validation snapshot](VALIDATION_STATUS.md) records 14 material
+selectors and five DNA observations, including six historical owner-accepted
+material effects. Additional observations retain their own reference/build
+scope; a matching selector does not validate the file being inspected.
+
 ```mermaid
 flowchart LR
     A[Private source CHF] --> B[Strict reader]

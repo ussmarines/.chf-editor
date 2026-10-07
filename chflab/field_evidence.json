@@ -20,7 +20,55 @@
       "game_save": "authenticated_retained",
       "visual_effect": "owner_validated_capture",
       "scope": "historical reference and build only; not a verdict for a new preset"
-    }
+    },
+    "additional_observations": [
+      {
+        "session": "2026-10-07 native validation",
+        "reference": "female generic preset; skin texture 11",
+        "before": 0.2543734610080719,
+        "after": 0.9014579057693481,
+        "ui_mapping": "confirmed_for_reference",
+        "game_save": "observed_file",
+        "game_load": "observed_reload_of_final_group_state",
+        "visual_effect": "capture_supported",
+        "scope": "One-control UI/save pair on this reference; group reload is not an individual intermediate-file reload. No binary-variant retention verdict."
+      },
+      {
+        "session": "2026-10-07 native validation",
+        "reference": "male generic preset; skin texture 11",
+        "before": 0.25005897879600525,
+        "after": 0.8831599354743958,
+        "ui_mapping": "confirmed_for_reference",
+        "game_save": "observed_file",
+        "game_load": "observed_reload_of_final_group_state",
+        "visual_effect": "capture_supported",
+        "scope": "One-control UI/save pair on this reference; group reload is not an individual intermediate-file reload. No binary-variant retention verdict."
+      },
+      {
+        "session": "2026-10-07 exact prepared suite",
+        "reference": "male accepted-export reference",
+        "before": 0.25,
+        "after": 0.949999988079071,
+        "ui_mapping": "not_isolated",
+        "game_load": "observed",
+        "game_save": "authenticated_retained",
+        "saved_copy_reload": "not_tested",
+        "visual_effect": "capture_supported",
+        "scope": "Exact one-float binary variant loaded and target retained in the game save; unrelated baseline normalization occurs. UI gesture mapping and saved-copy reload are separate, untested claims."
+      },
+      {
+        "session": "2026-10-07 exact prepared suite",
+        "reference": "female accepted-export reference",
+        "before": 0.0,
+        "after": 0.949999988079071,
+        "ui_mapping": "not_isolated",
+        "game_load": "observed",
+        "game_save": "authenticated_retained",
+        "saved_copy_reload": "not_tested",
+        "visual_effect": "not_isolated",
+        "scope": "Exact one-float binary variant loaded and target retained in the game save; unrelated baseline normalization occurs. UI gesture mapping and saved-copy reload are separate, untested claims."
+      }
+    ]
   },
   {
     "id": "female-hair-dye-amount",
@@ -210,6 +258,293 @@
     },
     "tested_channels": [
       "R"
+    ]
+  },
+  {
+    "id": "skin-freckles-amount-native-pair",
+    "control": "DNA > Skin > Freckles Amount",
+    "effect": "The saved value changed after the isolated UI gesture; its visible effect remains inconclusive.",
+    "level": "Native UI/save pairs on female and male generic references, 2026-10-07. Each pair changes exactly one logical float; container metadata also changes. Captures and authenticated private snapshots are retained locally. Final female and male group states reloaded; individual intermediate snapshots remain untested. No binary-variant retention verdict.",
+    "build": "LIVE 4.10.193.11644",
+    "selector": {
+      "material_index": 0,
+      "submaterial_index": 0,
+      "submaterial_hash": "8e9e1272",
+      "kind": "float",
+      "param_index": 29,
+      "name_hash": "e22777e8"
+    },
+    "source": "docs/EXPERIMENTS.md#published-evidence-catalog",
+    "validation": {
+      "ui_mapping": "confirmed_for_reference",
+      "game_load": "final_group_states_only",
+      "game_save": "observed_file",
+      "visual_effect": "not_isolated",
+      "scope": "historical native observations from 2026-10-07; tested female/male generic references and skin texture 11 only; not a verdict for a matching preset or prepared binary variant"
+    },
+    "additional_observations": [
+      {
+        "session": "2026-10-07 native validation",
+        "reference": "female generic preset; skin texture 11",
+        "before": 0.5070526599884033,
+        "after": 0.9925652146339417,
+        "ui_mapping": "confirmed_for_reference",
+        "game_save": "observed_file",
+        "game_load": "observed_reload_of_final_group_state",
+        "visual_effect": "not_isolated",
+        "scope": "One-control UI/save pair on this reference; group reload is not an individual intermediate-file reload. No binary-variant retention verdict."
+      },
+      {
+        "session": "2026-10-07 native validation",
+        "reference": "male generic preset; skin texture 11",
+        "before": 0.5092329978942871,
+        "after": 0.9743856191635132,
+        "ui_mapping": "confirmed_for_reference",
+        "game_save": "observed_file",
+        "game_load": "observed_reload_of_final_group_state",
+        "visual_effect": "not_isolated",
+        "scope": "One-control UI/save pair on this reference; group reload is not an individual intermediate-file reload. No binary-variant retention verdict."
+      },
+      {
+        "session": "2026-10-07 exact prepared suite",
+        "reference": "male accepted-export reference",
+        "before": 0.5,
+        "after": 0.949999988079071,
+        "ui_mapping": "not_isolated",
+        "game_load": "observed",
+        "game_save": "authenticated_retained",
+        "saved_copy_reload": "not_tested",
+        "visual_effect": "not_isolated",
+        "scope": "Exact one-float binary variant loaded and target retained in the game save; unrelated baseline normalization occurs. UI gesture mapping and saved-copy reload are separate, untested claims."
+      },
+      {
+        "session": "2026-10-07 exact prepared suite",
+        "reference": "female accepted-export reference",
+        "before": 0.0,
+        "after": 0.949999988079071,
+        "ui_mapping": "not_isolated",
+        "game_load": "observed",
+        "game_save": "authenticated_retained",
+        "saved_copy_reload": "not_tested",
+        "visual_effect": "not_isolated",
+        "scope": "Exact one-float binary variant loaded and target retained in the game save; unrelated baseline normalization occurs. UI gesture mapping and saved-copy reload are separate, untested claims."
+      }
+    ]
+  },
+  {
+    "id": "skin-sun-spots-opacity-native-pair",
+    "control": "DNA > Skin > Sun Spots Opacity",
+    "effect": "Larger brown skin spots became more pronounced.",
+    "level": "Native UI/save pairs on female and male generic references, 2026-10-07. Each pair changes exactly one logical float; container metadata also changes. Captures and authenticated private snapshots are retained locally. Final female and male group states reloaded; individual intermediate snapshots remain untested. No binary-variant retention verdict.",
+    "build": "LIVE 4.10.193.11644",
+    "selector": {
+      "material_index": 0,
+      "submaterial_index": 0,
+      "submaterial_hash": "8e9e1272",
+      "kind": "float",
+      "param_index": 26,
+      "name_hash": "6412c4cf"
+    },
+    "source": "docs/EXPERIMENTS.md#published-evidence-catalog",
+    "validation": {
+      "ui_mapping": "confirmed_for_reference",
+      "game_load": "final_group_states_only",
+      "game_save": "observed_file",
+      "visual_effect": "capture_supported",
+      "scope": "historical native observations from 2026-10-07; tested female/male generic references and skin texture 11 only; not a verdict for a matching preset or prepared binary variant"
+    },
+    "additional_observations": [
+      {
+        "session": "2026-10-07 native validation",
+        "reference": "female generic preset; skin texture 11",
+        "before": 0.0,
+        "after": 0.9014579653739929,
+        "ui_mapping": "confirmed_for_reference",
+        "game_save": "observed_file",
+        "game_load": "observed_reload_of_final_group_state",
+        "visual_effect": "capture_supported",
+        "scope": "One-control UI/save pair on this reference; group reload is not an individual intermediate-file reload. No binary-variant retention verdict."
+      },
+      {
+        "session": "2026-10-07 native validation",
+        "reference": "male generic preset; skin texture 11",
+        "before": 0.0,
+        "after": 0.8831509351730347,
+        "ui_mapping": "confirmed_for_reference",
+        "game_save": "observed_file",
+        "game_load": "observed_reload_of_final_group_state",
+        "visual_effect": "capture_supported",
+        "scope": "One-control UI/save pair on this reference; group reload is not an individual intermediate-file reload. No binary-variant retention verdict."
+      },
+      {
+        "session": "2026-10-07 exact prepared suite",
+        "reference": "male accepted-export reference",
+        "before": 0.25,
+        "after": 0.949999988079071,
+        "ui_mapping": "not_isolated",
+        "game_load": "observed",
+        "game_save": "authenticated_retained",
+        "saved_copy_reload": "not_tested",
+        "visual_effect": "capture_supported",
+        "scope": "Exact one-float binary variant loaded and target retained in the game save; unrelated baseline normalization occurs. UI gesture mapping and saved-copy reload are separate, untested claims."
+      },
+      {
+        "session": "2026-10-07 exact prepared suite",
+        "reference": "female accepted-export reference",
+        "before": 0.0,
+        "after": 0.949999988079071,
+        "ui_mapping": "not_isolated",
+        "game_load": "observed",
+        "game_save": "authenticated_retained",
+        "saved_copy_reload": "not_tested",
+        "visual_effect": "not_isolated",
+        "scope": "Exact one-float binary variant loaded and target retained in the game save; unrelated baseline normalization occurs. UI gesture mapping and saved-copy reload are separate, untested claims."
+      }
+    ]
+  },
+  {
+    "id": "skin-sun-spots-amount-native-pair",
+    "control": "DNA > Skin > Sun Spots Amount",
+    "effect": "Larger brown skin spots became more pronounced.",
+    "level": "Native UI/save pairs on female and male generic references, 2026-10-07. Each pair changes exactly one logical float; container metadata also changes. Captures and authenticated private snapshots are retained locally. Final female and male group states reloaded; individual intermediate snapshots remain untested. No binary-variant retention verdict.",
+    "build": "LIVE 4.10.193.11644",
+    "selector": {
+      "material_index": 0,
+      "submaterial_index": 0,
+      "submaterial_hash": "8e9e1272",
+      "kind": "float",
+      "param_index": 10,
+      "name_hash": "0fd24a55"
+    },
+    "source": "docs/EXPERIMENTS.md#published-evidence-catalog",
+    "validation": {
+      "ui_mapping": "confirmed_for_reference",
+      "game_load": "final_group_states_only",
+      "game_save": "observed_file",
+      "visual_effect": "capture_supported",
+      "scope": "historical native observations from 2026-10-07; tested female/male generic references and skin texture 11 only; not a verdict for a matching preset or prepared binary variant"
+    },
+    "additional_observations": [
+      {
+        "session": "2026-10-07 native validation",
+        "reference": "female generic preset; skin texture 11",
+        "before": 0.25082892179489136,
+        "after": 0.9014579653739929,
+        "ui_mapping": "confirmed_for_reference",
+        "game_save": "observed_file",
+        "game_load": "observed_reload_of_final_group_state",
+        "visual_effect": "capture_supported",
+        "scope": "One-control UI/save pair on this reference; group reload is not an individual intermediate-file reload. No binary-variant retention verdict."
+      },
+      {
+        "session": "2026-10-07 native validation",
+        "reference": "male generic preset; skin texture 11",
+        "before": 0.2563323378562927,
+        "after": 0.8831599950790405,
+        "ui_mapping": "confirmed_for_reference",
+        "game_save": "observed_file",
+        "game_load": "observed_reload_of_final_group_state",
+        "visual_effect": "capture_supported",
+        "scope": "One-control UI/save pair on this reference; group reload is not an individual intermediate-file reload. No binary-variant retention verdict."
+      },
+      {
+        "session": "2026-10-07 exact prepared suite",
+        "reference": "male accepted-export reference",
+        "before": 0.5,
+        "after": 0.949999988079071,
+        "ui_mapping": "not_isolated",
+        "game_load": "observed",
+        "game_save": "authenticated_retained",
+        "saved_copy_reload": "not_tested",
+        "visual_effect": "not_isolated",
+        "scope": "Exact one-float binary variant loaded and target retained in the game save; unrelated baseline normalization occurs. UI gesture mapping and saved-copy reload are separate, untested claims."
+      },
+      {
+        "session": "2026-10-07 exact prepared suite",
+        "reference": "female accepted-export reference",
+        "before": 0.0,
+        "after": 0.949999988079071,
+        "ui_mapping": "not_isolated",
+        "game_load": "observed",
+        "game_save": "authenticated_retained",
+        "saved_copy_reload": "not_tested",
+        "visual_effect": "not_isolated",
+        "scope": "Exact one-float binary variant loaded and target retained in the game save; unrelated baseline normalization occurs. UI gesture mapping and saved-copy reload are separate, untested claims."
+      }
+    ]
+  },
+  {
+    "id": "male-hair-base-melanin-prepared-suite",
+    "control": "Hair > Color > Natural Color (isolated BaseMelanin variant)",
+    "effect": "Hair changed from dark to near white at 0.0005 instead of 0.9995 on this tested reference.",
+    "level": "2026-10-07 exact prepared one-float variant, observed load and save, authenticated target retention and comparable captures. This hairstyle context differs from the older accepted reference. UI gesture mapping and saved-copy reload were not tested.",
+    "build": "LIVE 4.10.193.11644",
+    "selector": {
+      "material_index": 3,
+      "submaterial_index": 0,
+      "submaterial_hash": "cdd049df",
+      "kind": "float",
+      "param_index": 5,
+      "name_hash": "a300fab9"
+    },
+    "source": "docs/EXPERIMENTS.md#published-evidence-catalog",
+    "validation": {
+      "ui_mapping": "not_isolated",
+      "game_load": "observed",
+      "game_save": "authenticated_retained",
+      "visual_effect": "capture_supported",
+      "scope": "historical native observation 2026-10-07; exact tested male accepted-export reference and hairstyle only; no general transfer to matching presets"
+    },
+    "additional_observations": [
+      {
+        "session": "2026-10-07 exact prepared suite",
+        "reference": "male accepted-export reference",
+        "before": 0.999500036239624,
+        "after": 0.0005000000237487257,
+        "ui_mapping": "not_isolated",
+        "game_load": "observed",
+        "game_save": "authenticated_retained",
+        "saved_copy_reload": "not_tested",
+        "visual_effect": "capture_supported",
+        "scope": "Exact one-float binary variant loaded and target retained in the game save; unrelated baseline normalization occurs. UI gesture mapping and saved-copy reload are separate, untested claims."
+      }
+    ]
+  },
+  {
+    "id": "female-hair-base-melanin-prepared-suite",
+    "control": "Hair > Color > Natural Color (isolated BaseMelanin variant)",
+    "effect": "Hair changed from dark to near white at 0.0005 instead of 0.9995 on this tested reference.",
+    "level": "2026-10-07 exact prepared one-float variant, observed load and save, authenticated target retention and comparable captures. This hairstyle context differs from the older accepted reference. UI gesture mapping and saved-copy reload were not tested.",
+    "build": "LIVE 4.10.193.11644",
+    "selector": {
+      "material_index": 3,
+      "submaterial_index": 0,
+      "submaterial_hash": "1fc558bf",
+      "kind": "float",
+      "param_index": 5,
+      "name_hash": "a300fab9"
+    },
+    "source": "docs/EXPERIMENTS.md#published-evidence-catalog",
+    "validation": {
+      "ui_mapping": "not_isolated",
+      "game_load": "observed",
+      "game_save": "authenticated_retained",
+      "visual_effect": "capture_supported",
+      "scope": "historical native observation 2026-10-07; exact tested female accepted-export reference and hairstyle only; no general transfer to matching presets"
+    },
+    "additional_observations": [
+      {
+        "session": "2026-10-07 exact prepared suite",
+        "reference": "female accepted-export reference",
+        "before": 0.999500036239624,
+        "after": 0.0005000000237487257,
+        "ui_mapping": "not_isolated",
+        "game_load": "observed",
+        "game_save": "authenticated_retained",
+        "saved_copy_reload": "not_tested",
+        "visual_effect": "capture_supported",
+        "scope": "Exact one-float binary variant loaded and target retained in the game save; unrelated baseline normalization occurs. UI gesture mapping and saved-copy reload are separate, untested claims."
+      }
     ]
   }
 ]
