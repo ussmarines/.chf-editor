@@ -19,6 +19,22 @@ Do not send character files, reference images, captures, or experiment manifests
 
 An image can guide a hypothesis but cannot directly determine CHF values. No faithful standalone 3D preview is provided.
 
+## Authorized local game validation
+
+Read [current validation status](VALIDATION_STATUS.md) before repeating accepted
+experiments. Native character-editor tests may be performed when the user has
+authorized them and the session exposes suitable controls. Keep that scope
+explicit: permission to test the editor does not authorize gameplay, game
+restarts, unrelated applications or system changes. Parallel agents should
+analyze files or documentation while one agent controls the UI.
+
+Refresh the measured panel after loading; Hair > Color can retain stale values.
+Record variant loading, observed saving, exact target retention and saved-copy
+reload separately. Compare texture entries by their index when BioCorp inserts
+a texture, and separate baseline colour quantization from the target change.
+The [save monitor](SAVE_MONITOR.md) can archive local evidence, but its control
+labels are user-supplied candidate associations rather than recognition.
+
 ## Optional binary investigation
 
 The project-local REA skill is an optional evidence-driven investigation guide,

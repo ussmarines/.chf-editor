@@ -33,7 +33,7 @@ and unchanged. No new game session or screenshot is claimed by this decision.
 | Female root-dye color, material 3, red byte | UI pair changes two copies; one-byte experiment isolates this occurrence | Historically reported | Recorded re-save hash malformed; association unauthenticated | VALIDATED by owner: burgundy hair in historical capture; only R was isolated |
 | Secondary dye-color copy, material 5, red byte | Exact BioCorp control not established | Historically reported | Authenticated copy resets the byte | Accepted negative observation: no visible change reported; not a usable validated color control |
 
-The public catalog has **9 material observations**, including a negative result. It does not have nine universally validated controls. Numeric values remain raw CHF values; no general slider percentages or safe visual ranges have been established.
+The public catalog has **14 material contexts with unique selectors**, including a negative result and additional scoped observations. The table above retains the nine historical contexts; later native tests are summarized below. These are not fourteen universally validated controls. Numeric values remain raw CHF values; no general slider percentages or safe visual ranges have been established.
 
 ## DNA observations
 
@@ -51,27 +51,71 @@ Additional archived eyebrow, cheek, jaw and crown candidates establish structura
 
 ## Coverage of the reviewed private exports
 
-These counts are a reference snapshot, not a statement about every female or male preset. The GUI computes the matching observations for the file actually opened.
+These counts were recomputed against the unchanged reviewed baselines and the expanded catalog on 2026-10-07. They are not a statement about every female or male preset. The GUI computes the matching observations for the file actually opened.
 
 | Coverage | Reviewed female v8 export | Reviewed male v8 export |
 | --- | ---: | ---: |
 | Material float/color occurrences | 93 | 111 |
 | Occurrences without a source name | 0 | 0 |
-| Occurrences without a matching catalog observation | 91 | 109 |
-| Occurrences without a matching historical positive visual observation | 92 | 109 |
+| Occurrences without a matching catalog observation | 87 | 105 |
+| Occurrences without a matching positive visual observation | 89 | 106 |
 | DNA regions without matching catalog UI evidence | 9 / 13 | 13 / 13 |
 
-There are 200 material occurrences without matching observations across these files, with repeated names and hashes. This is not 200 unique controls. Even positive historical matches must be verified on the reviewed exports themselves.
+There are 192 material occurrences without matching observations across these files, with repeated names and hashes. This is not 192 unique controls. Matching selectors identify evidence contexts; they do not establish every matching field's visual effect on this file.
 
 ## Current installed-file check and next tests
 
 The two active character files were found under renamed filenames and authenticated byte-for-byte against the accepted archived exports. Their structure passes. The installed build manifest reports `4.10.193.11644`. This resolves the earlier absence of the original export filenames; it does not demonstrate a new game load or save.
 
-No new game validation was performed in this session: Star Citizen was not running and native game observation/input was unavailable. Locally prepared experiments remain `not tested` for game loading, saving and visible effect until those outcomes are observed.
+At the earlier preparation snapshot, no new game validation had been performed:
+Star Citizen was not running and native game observation/input was unavailable.
+The later native UI/save observations below are separate from the prepared
+binary experiments, subsequently tested as recorded below.
 
-A private test bundle was prepared from the two authenticated active presets: six candidates per sex, each based on its unchanged baseline. It isolates FrecklesOpacity, FrecklesAmount, SunSpotsOpacity, SunSpotsAmount, BaseMelanin, or two balanced Nose weights. All 12 candidates pass the guarded writer, exact raw-payload and opaque-container preservation checks, single-frame Zstandard checking, and independent parsing with StarBreaker binary `0.3.2`. These are prepared experiments, not new game observations; no candidate was installed into the game directory.
+A private test bundle was prepared from the two authenticated active presets: six candidates per sex, each based on its unchanged baseline. It isolates FrecklesOpacity, FrecklesAmount, SunSpotsOpacity, SunSpotsAmount, BaseMelanin, or two balanced Nose weights. All 12 candidates pass the guarded writer, exact raw-payload and opaque-container preservation checks, single-frame Zstandard checking, and independent parsing with StarBreaker binary `0.3.2`. At preparation time these were offline experiments and no candidate had been installed. The subsequent exact-file native validation is recorded below.
 
 Prioritize female/male paired tests for freckles and sun spots, hair pigment under controlled dye state, and balanced DNA weights. Preserve the baseline; import each candidate, refresh the measured panel, capture the same view and lighting, save a new copy without another gesture, compare the result, then reload that saved copy. Record loading, saving, value retention and visible effect separately. Do not infer a field's role merely because BioCorp retains its value.
+
+## Native skin UI/save validation, 2026-10-07
+
+Eight controlled pairs, four per sex, connect Freckles Amount, Freckles Opacity,
+Sun Spots Opacity and Sun Spots Amount to exact float occurrences on generic
+female and male references, skin texture 11. Every pair changes one logical
+float, and the archived game-save snapshots pass structural inspection.
+The [pair summary](EXPERIMENTS.md#native-skin-uisave-pairs-2026-10-07) records
+selectors and values. These observations concern LIVE `4.10.193.11644`, BioCorp
+`01.05.03`; originals and private evidence remain outside tracked files.
+
+UI mapping and observed game saving are supported for all eight pairs. Captures
+support visible opacity and sun-spot changes on the tested references;
+Freckles Amount remains visually inconclusive. The final female and male group
+states were reloaded with their four changed values. Individual intermediate
+reloads and retention through a no-gesture re-save are not claimed by this snapshot. The historical six owner
+acceptances remain intact; new capture-supported observations do not acquire
+owner acceptance. The separate twelve Alia/Corvin binary candidates were subsequently tested as
+recorded below; no head-ID anatomical meaning is established.
+
+## Exact prepared-suite game validation, 2026-10-07
+
+The two accepted-export baselines and all twelve prepared variants were loaded,
+captured and saved. All saved files pass structural inspection. Input and saved
+SHA-256 fingerprints were independently checked; every target float or complete
+balanced Nose region retained its exact input values. No subsequent reload of
+the saved variant copies is claimed. Target retention and observed saving are
+separate from whole-file equality: BioCorp inserts texture index 9 in every
+save, and repeats four baseline colour quantizations on the male reference.
+Texture matching by index confirms existing GUIDs remain unchanged; see the
+[exact-suite summary](EXPERIMENTS.md#exact-prepared-variants-loaded-and-saved-2026-10-07).
+
+Both BaseMelanin variants visibly changed hair from dark to near white. Male
+FrecklesOpacity and SunSpotsOpacity also had visible effects. Amount controls,
+balanced Nose changes, and the female skin variants remain inconclusive; the
+female reference's other contributing skin controls at zero limit interpretation.
+These results do not generalize visual mappings or establish individual head-ID
+anatomy. New hair selectors use capture-supported evidence, preserving the six
+historical owner acceptances. Five installed originals and all fourteen suite
+inputs were checked byte-for-byte unchanged; the initial female working copy
+was restored in the character editor after testing.
 
 ## Local native-library validation, 2026-10-07
 
@@ -86,6 +130,13 @@ The machine-specific launcher remains under ignored `outputs/local-runtime/`;
 it restores the caller's environment and working directory after execution.
 No DLL download, binary vendoring or global environment modification was needed.
 See [native-library setup and tests](TOOLCHAIN.md#native-library-tests).
+
+The final publication check used the existing optional monitor environment and
+unchanged female and male baselines. All 31 tests passed on each reference, with
+no skips, including the synthetic capture/sequence tests and native Zstandard
+roundtrip. These tests do not operate the game or supply missing visual/reload
+evidence. The Brain migration preserved 23 historical entries, accepted the new
+evidence entry through the standard CLI, and passed link checking.
 
 ## Guided editing
 

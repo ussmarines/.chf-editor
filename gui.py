@@ -9,6 +9,7 @@ from tkinter import filedialog, messagebox, ttk
 from chf import inspect_file, structural_diff, variant, variant_param
 from chflab.evidence import evidence_report, material_options
 from chflab.zstd_runtime import discover_zstd, resolve_zstd, check_zstd
+from chflab.monitor_gui import MonitorWindow
 
 KNOWN_NAMES = json.loads((Path(__file__).parent / "chflab" / "known_names.json").read_text(encoding="utf-8"))
 KNOWN_GUIDS = json.loads((Path(__file__).parent / "chflab" / "known_guids.json").read_text(encoding="utf-8"))
@@ -112,7 +113,8 @@ class App(tk.Tk):
         actions.pack(fill="x", padx=10)
         for title, command in (("Open female", lambda: self.open("female")),
                                ("Open male", lambda: self.open("male")),
-                               ("Compare", self.compare)):
+                               ("Compare", self.compare),
+                               ("Monitor saves", lambda: MonitorWindow(self))):
             ttk.Button(actions, text=title, command=command).pack(side="left", padx=3)
         self.state = ttk.Label(actions, text="No file open")
         self.state.pack(side="left", padx=12)
@@ -324,4 +326,27 @@ class App(tk.Tk):
 
 
 if __name__ == "__main__":
-    App().mainloop()
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--monitor', action='store_true', help='open the save monitor setup')
+    parser.add_argument('--capture', action='store_true', help='preselect optional local game capture; requires --monitor')
+    parser.add_argument('--preset', help='prefill the female file chooser; gender is not inferred')
+    parser.add_argument('--zstd-dll', help='prefill the native library path')
+    parser.add_argument('--game-build', help='prefill the reported game build')
+    parser.add_argument('--control', help='prefill the user-reported monitoring control')
+    args = parser.parse_args()
+    if args.capture and not args.monitor:
+        parser.error('--capture requires --monitor')
+    app = App()
+    if args.preset:
+        app.female.set(args.preset)
+    if args.zstd_dll:
+        app.dll.set(args.zstd_dll)
+    if args.game_build:
+        app.version.set(args.game_build)
+    if args.monitor:
+        monitor_window = MonitorWindow(app)
+        monitor_window.capture.set(args.capture)
+        if args.control:
+            monitor_window.control.set(args.control)
+    app.mainloop()

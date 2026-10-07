@@ -42,6 +42,31 @@ node <brain-page-skill-bundle>/bin/brain.mjs <subcommand> [flags]
 
 Resolve `<brain-page-skill-bundle>` to wherever the brain-page skill is installed (globally, e.g. `~/.claude/skills/brain-page/`; or, in the brain.md source repo, `skills/brain-page/`). Run all commands from the **project root**. Run `... bin/brain.mjs help` for the full flag reference.
 
+### Windows invocation and legacy repair
+
+Resolve the installed skill path locally; the public repository does not include
+the CLI or private Brain pages. In PowerShell, assign that path to `$brainCli`.
+Preserve UTF-8 and actual line breaks when supplying text through stdin. In
+PowerShell, do not join `Get-Content` lines with an empty separator; use `-Raw`
+when reading a whole document. Verify a write with `read-page` and `list-pages`.
+
+If a legacy page produces `section timeline not found` and `list-pages` shows
+missing metadata, inspect it through `read-page` first. A fully collapsed page
+can be repaired through the project migration CLI:
+
+```powershell
+$brainCli = '<brain-page-skill-bundle>/bin/brain.mjs'
+node tools/brain-repair.mjs --cli $brainCli --id evidence-boundary
+# Review the dry-run SHA and entry count, then supply that SHA:
+node tools/brain-repair.mjs --cli $brainCli --id evidence-boundary --apply --sha256 <dry-run-sha>
+```
+
+This narrowly authorized migration restores line separators without changing
+existing characters, preserves the exact original under ignored
+`outputs/brain-repair/`, and uses the Brain library's atomic writer and reindexer.
+It refuses other formats or a changed source SHA. Normal reads and subsequent
+updates continue through the standard CLI; never repair a page by hand.
+
 **Where the brain lives.** The CLI resolves the brain directory itself, so every command is location-independent:
 
 1. If `./.mindmux/preferences.json` exists and has a `brainRoot` field, that path is the brain root (it contains `pages/` and the six root pages). It may be absolute (e.g. a MindMux-managed sidecar like `/Users/me/Work/myproject-brain`) or relative to the project root.

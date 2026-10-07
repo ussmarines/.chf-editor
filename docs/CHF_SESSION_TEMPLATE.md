@@ -37,6 +37,10 @@ Game load: PASS | FAIL | NOT TESTED
 Editor stable: PASS | FAIL | NOT TESTED
 Game save: PASS | FAIL | NOT TESTED
 Game-saved output SHA-256, if obtained:
+Target values retained on independent saved-file re-read: PASS | FAIL | NOT TESTED
+Other save normalization compared with baseline (textures by index):
+Saved-copy reload: PASS | FAIL | NOT TESTED
+Values after reload and refreshed panel:
 Comparable front / three-quarter / profile captures (private):
 Observed visual effect: CONFIRMED | NONE SEEN | AMBIGUOUS | NOT TESTED
 

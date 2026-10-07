@@ -36,6 +36,7 @@ The application runs locally on Windows, preserves the original input, refuses t
 | --- | --- |
 | Explore a Star Citizen character preset | View its structure, DNA regions, ItemPorts, materials, and available evidence in the GUI. |
 | Compare two CHF files | Inspect logical differences with the `diff` command or GUI. |
+| Monitor game saves | Watch a selected CHF or new saves in its folder, archive diffs, and optionally capture the foreground game window locally. See [save monitoring](docs/SAVE_MONITOR.md). |
 | Test a DNA change | Change one weight and balance it with another weight in the same region. |
 | Test a material change | Change one existing float or color component with an exact source SHA-256 guard. |
 | Validate an export | Check size, CRC32C, Zstandard bounds, v7/v8 structure, and the expected logical diff; re-read the result independently. |
@@ -44,7 +45,7 @@ The tool does not render characters, compose complete character recipes, automat
 
 ## What is validated?
 
-The catalog records **9 material observations and 5 DNA observations** on historical references in LIVE `4.10.193.11644`. Validation is specific to the tested preset, field context and build.
+The catalog records **14 material contexts and 5 DNA observations** in LIVE `4.10.193.11644`. Material entries have unique structural selectors and can contain multiple scoped observations. Validation is specific to the tested preset, field context and build.
 
 On 2026-10-07, the owner **validated the six positive screenshot-backed material
 effects** on those references. The catalog and GUI record that acceptance without
@@ -55,11 +56,13 @@ See [validation status](docs/VALIDATION_STATUS.md#owner-visual-acceptance-2026-1
 | --- | --- |
 | Freckles opacity; hair, beard and eyebrow melanin | Historical visible effects and authenticated saved values in the tested contexts. |
 | Root hair dye, isolated red channel | Historical visible effect; re-save fingerprint incomplete. A secondary copy had no visible effect and was reset on saving. |
+| Four skin controls on female/male generic references | Isolated UI/save pairs; final group states reloaded. Freckles Amount remains visually inconclusive. |
+| Twelve independent female/male variants | Loaded and saved with exact target-value retention; saved copies not reloaded. Hair BaseMelanin visibly changes both tested references; several skin and Nose results remain inconclusive. |
 | Dye Amount and Natural Color Variation | Bounded UI associations; visible effect not isolated. |
 | Female Nose, Mouth and linked Eye regions | Recorded region-level UI pairs; effects reported or inconclusive. Individual contributors remain unknown. |
 | Other DNA regions, male UI-region mappings, individual head IDs, general value ranges | Not validated as editing controls. Source names and file structure alone are insufficient. |
 
-In the two reviewed private v8 exports, **91/93 female and 109/111 male material occurrences have no matching catalog observation**; **9/13 female and 13/13 male DNA regions have no matching UI evidence**. All material parameters in those files have source names, which does not establish their effects. Counts vary by file, and a matching historical observation still needs validation on a new preset. Read the [complete validation status](docs/VALIDATION_STATUS.md) for separate loading, saving, visible-effect and negative-result details.
+In the two reviewed private v8 exports, **87/93 female and 105/111 male material occurrences have no matching catalog observation**; **9/13 female and 13/13 male DNA regions have no matching UI evidence**. All material parameters in those files have source names, which does not establish their effects. Counts vary by file, and a matching observation still needs validation on a new preset. BioCorp can normalize other fields while preserving the target value. Read the [complete validation status](docs/VALIDATION_STATUS.md) for separate loading, saving, visible-effect and negative-result details.
 
 ## Get started
 
