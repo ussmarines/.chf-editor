@@ -70,6 +70,17 @@ native computer APIs were disabled. Synthetic pixel tests and file-monitoring
 tests do not establish that Star Citizen's rendered window can be captured. Verify
 that the first recorded PNG shows BioCorp before relying on the capture record.
 
+On 2026-10-07 an owner-driven female Jaw retest produced two endpoint PNGs and
+ten timestamped sequence images using `visible_game_area`. Retained images were
+reviewed and show BioCorp; the archived before/after CHF files were independently
+reparsed and their recorded hashes/diff authenticated. This confirms the fallback
+capture worked for that test. It does not establish general graphics-mode
+compatibility, automatic marker recognition or successful reloading of the save.
+The endpoint images show a different highlighted blend contributor with the
+Blend Jaw percentage unchanged; unknown container metadata also changes. The
+sequence starts after the selection change, demonstrating that gestures followed
+by a long delay before saving may fall outside the ten-frame buffer.
+
 File monitoring works without Pillow. All populated sessions, CHF snapshots,
 images and machine-specific launchers remain private under `outputs/`. No runtime
 attachment, input automation, game modification or complete character creator is
