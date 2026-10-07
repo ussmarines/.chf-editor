@@ -9,6 +9,7 @@ import struct
 import tempfile
 
 from chflab.inspector import FACE_PARTS, crc32c, decompress, inspect, structural_diff
+from chflab.zstd_runtime import resolve_zstd
 
 
 def digest(data):
@@ -78,7 +79,8 @@ def publish_candidate(source, output, dll, before, raw, payload, wanted, change,
         "output": str(output), "output_sha256": reread["sha256"],
         "game_version": game_version, "control": control, "change": change,
         "structured_diff": changes, "structural_validation": "PASS",
-        "game_load": "not tested", "screenshots": [], "visual_verdict": "not tested",
+        "game_load": "not tested", "game_save": "not tested",
+        "screenshots": [], "visual_verdict": "not tested",
     }
     manifest_data = json.dumps(manifest, ensure_ascii=False, indent=2).encode("utf-8")
     created_output = False
@@ -218,7 +220,8 @@ def variant_param(source, output, dll, expected_source_sha256, material_index,
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--zstd-dll", type=Path, required=True)
+    parser.add_argument("--zstd-dll", type=Path,
+                        help="native library path; defaults to CHF_ZSTD_DLL or a detected Python library")
     commands = parser.add_subparsers(dest="command", required=True)
     for name in ("inspect", "diff"):
         p = commands.add_parser(name)
@@ -248,6 +251,7 @@ def main():
     p.add_argument("--control", required=True)
     args = parser.parse_args()
     try:
+        args.zstd_dll = resolve_zstd(args.zstd_dll)
         if args.command == "inspect":
             result = inspect_file(args.files[0], args.zstd_dll)
         elif args.command == "diff":

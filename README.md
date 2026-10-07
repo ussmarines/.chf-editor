@@ -42,6 +42,20 @@ The application runs locally on Windows, preserves the original input, refuses t
 
 The tool does not render characters, compose complete character recipes, automatically infer visual meaning from unverified fields, or act as a general-purpose save editor.
 
+## What is validated?
+
+The catalog records **9 material observations and 5 DNA observations** on historical references in LIVE `4.10.193.11644`. Validation is specific to the tested preset, field context and build.
+
+| Evidence | Current status |
+| --- | --- |
+| Freckles opacity; hair, beard and eyebrow melanin | Historical visible effects and authenticated saved values in the tested contexts. |
+| Root hair dye, isolated red channel | Historical visible effect; re-save fingerprint incomplete. A secondary copy had no visible effect and was reset on saving. |
+| Dye Amount and Natural Color Variation | Bounded UI associations; visible effect not isolated. |
+| Female Nose, Mouth and linked Eye regions | Recorded region-level UI pairs; effects reported or inconclusive. Individual contributors remain unknown. |
+| Other DNA regions, male UI-region mappings, individual head IDs, general value ranges | Not validated as editing controls. Source names and file structure alone are insufficient. |
+
+In the two reviewed private v8 exports, **91/93 female and 109/111 male material occurrences have no matching catalog observation**; **9/13 female and 13/13 male DNA regions have no matching UI evidence**. All material parameters in those files have source names, which does not establish their effects. Counts vary by file, and a matching historical observation still needs validation on a new preset. Read the [complete validation status](docs/VALIDATION_STATUS.md) for separate loading, saving, visible-effect and negative-result details.
+
 ## Get started
 
 ### Requirements
@@ -61,6 +75,8 @@ python gui.py
 ```
 
 In the GUI, select your Zstandard DLL and browse for local presets. The tabs cover **Overview**, **DNA**, **ItemPorts**, **Materials**, **Diff**, and **Evidence**. No game installation path is built into the application.
+
+Use **Detect / check** to verify the native library with an actual compression/decompression roundtrip. The GUI and CLI also accept `CHF_ZSTD_DLL` and can detect an existing DLL in standard Python library locations. Nothing is downloaded automatically. The material editor defaults to **Catalog observations**; choose **Observed visual changes** for positive historical evidence or **All raw parameters** for unvalidated experiments. Values are raw CHF values, not BioCorp percentages.
 
 ### Command-line examples
 
@@ -97,6 +113,7 @@ Keep presets, manifests, screenshots, videos, and extracted game files private. 
 | [Remaining work](docs/NEXT_STEPS.md) | Follow the phase-one validation and mapping priorities. |
 | [Experiments and evidence](docs/EXPERIMENTS.md) | Understand the published evidence and its limits. |
 | [Mapping revalidation](docs/MAPPING_REVALIDATION.md) | Review rechecked historical observations, source-label coverage, and provenance gaps. |
+| [Validation status](docs/VALIDATION_STATUS.md) | See what is validated, negative, inconclusive, or still unknown, and how guided editing uses that evidence. |
 | [Agent workflow](docs/AGENT_WORKFLOW.md) | Run bounded experiments with clear provenance. |
 | [Tools and skills](docs/TOOLCHAIN.md) | Find official sources and set up a fork. |
 | [Archive integration](docs/STARFALL_ARCHIVE_IMPORT.md) | See what was retained from the supplied Starfall research. |

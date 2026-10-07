@@ -38,6 +38,8 @@ The fork **does** include two project-local skills: [`chf-editor`](../.agents/sk
 
 Get a compatible native Zstandard library from the [official Zstandard source and releases](https://github.com/facebook/zstd/releases). Supply its DLL path explicitly; this repository does not download or bundle third-party binaries. No Python framework or pip package is needed for the current application.
 
+Alternatively, set `CHF_ZSTD_DLL` once in your shell and omit `--zstd-dll`. The GUI's **Detect / check** button checks required exports and a real compression/decompression roundtrip, and displays the loaded library version. Detection searches the environment and standard Python executable/DLL/library locations; it does not recursively scan the computer or install a library. An invalid explicit or environment path is rejected rather than silently replaced. The version function and compression API are documented in the [official Zstandard manual](https://facebook.github.io/zstd/zstd_manual.html); Tkinter selection handling follows the [Python ttk documentation](https://docs.python.org/3/library/tkinter.ttk.html).
+
 The public repository intentionally omits the local `brain/` pages because they contain private experiment provenance. To use Project Brain in a fork, obtain the skills from the upstream repository, then run `node <brain-page-skill>/bin/brain.mjs init` from your fork's root and create your own pages. The application works without this agent workflow.
 
 ## GitHub features in a fork

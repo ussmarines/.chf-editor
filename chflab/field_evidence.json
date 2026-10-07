@@ -13,7 +13,14 @@
       "param_index": 15,
       "name_hash": "58cb6193"
     },
-    "source": "docs/EXPERIMENTS.md#published-evidence-catalog"
+    "source": "docs/EXPERIMENTS.md#published-evidence-catalog",
+    "validation": {
+      "ui_mapping": "confirmed_for_reference",
+      "game_load": "historical_report",
+      "game_save": "authenticated_retained",
+      "visual_effect": "capture_supported",
+      "scope": "historical reference and build only; not a verdict for a new preset"
+    }
   },
   {
     "id": "female-hair-dye-amount",
@@ -29,7 +36,14 @@
       "param_index": 2,
       "name_hash": "5ac1f64a"
     },
-    "source": "docs/EXPERIMENTS.md#published-evidence-catalog"
+    "source": "docs/EXPERIMENTS.md#published-evidence-catalog",
+    "validation": {
+      "ui_mapping": "group_only",
+      "game_load": "historical_report",
+      "game_save": "authenticated_retained",
+      "visual_effect": "not_isolated",
+      "scope": "historical reference and build only; not a verdict for a new preset"
+    }
   },
   {
     "id": "female-hair-variation",
@@ -45,7 +59,14 @@
       "param_index": 4,
       "name_hash": "c8a79aa5"
     },
-    "source": "docs/EXPERIMENTS.md#published-evidence-catalog"
+    "source": "docs/EXPERIMENTS.md#published-evidence-catalog",
+    "validation": {
+      "ui_mapping": "confirmed_for_reference",
+      "game_load": "historical_report",
+      "game_save": "not_authenticated",
+      "visual_effect": "not_isolated",
+      "scope": "historical reference and build only; not a verdict for a new preset"
+    }
   },
   {
     "id": "female-hair-base-melanin",
@@ -61,7 +82,14 @@
       "param_index": 5,
       "name_hash": "a300fab9"
     },
-    "source": "docs/EXPERIMENTS.md#published-evidence-catalog"
+    "source": "docs/EXPERIMENTS.md#published-evidence-catalog",
+    "validation": {
+      "ui_mapping": "group_only",
+      "game_load": "historical_report",
+      "game_save": "authenticated_retained",
+      "visual_effect": "capture_supported",
+      "scope": "historical reference and build only; not a verdict for a new preset"
+    }
   },
   {
     "id": "male-hair-base-melanin",
@@ -77,7 +105,14 @@
       "param_index": 5,
       "name_hash": "a300fab9"
     },
-    "source": "docs/EXPERIMENTS.md#published-evidence-catalog"
+    "source": "docs/EXPERIMENTS.md#published-evidence-catalog",
+    "validation": {
+      "ui_mapping": "not_isolated",
+      "game_load": "historical_report",
+      "game_save": "authenticated_retained",
+      "visual_effect": "capture_supported",
+      "scope": "historical reference and build only; not a verdict for a new preset"
+    }
   },
   {
     "id": "male-beard-base-melanin",
@@ -93,7 +128,14 @@
       "param_index": 5,
       "name_hash": "a300fab9"
     },
-    "source": "docs/EXPERIMENTS.md#published-evidence-catalog"
+    "source": "docs/EXPERIMENTS.md#published-evidence-catalog",
+    "validation": {
+      "ui_mapping": "not_isolated",
+      "game_load": "historical_report",
+      "game_save": "authenticated_retained",
+      "visual_effect": "capture_supported",
+      "scope": "historical reference and build only; not a verdict for a new preset"
+    }
   },
   {
     "id": "male-brow-base-melanin",
@@ -109,7 +151,14 @@
       "param_index": 5,
       "name_hash": "a300fab9"
     },
-    "source": "docs/EXPERIMENTS.md#published-evidence-catalog"
+    "source": "docs/EXPERIMENTS.md#published-evidence-catalog",
+    "validation": {
+      "ui_mapping": "not_isolated",
+      "game_load": "historical_report",
+      "game_save": "authenticated_retained",
+      "visual_effect": "capture_supported",
+      "scope": "historical reference and build only; not a verdict for a new preset"
+    }
   },
   {
     "id": "female-hair-root-dye-red-channel",
@@ -125,7 +174,17 @@
       "param_index": 1,
       "name_hash": "09c9c7a2"
     },
-    "source": "docs/EXPERIMENTS.md#published-evidence-catalog"
+    "source": "docs/EXPERIMENTS.md#published-evidence-catalog",
+    "validation": {
+      "ui_mapping": "group_only",
+      "game_load": "historical_report",
+      "game_save": "not_authenticated",
+      "visual_effect": "capture_supported",
+      "scope": "historical reference and build only; not a verdict for a new preset"
+    },
+    "tested_channels": [
+      "R"
+    ]
   },
   {
     "id": "female-secondary-hair-dye-copy-negative",
@@ -141,6 +200,16 @@
       "param_index": 0,
       "name_hash": "09c9c7a2"
     },
-    "source": "docs/EXPERIMENTS.md#published-evidence-catalog"
+    "source": "docs/EXPERIMENTS.md#published-evidence-catalog",
+    "validation": {
+      "ui_mapping": "not_isolated",
+      "game_load": "historical_report",
+      "game_save": "authenticated_reset",
+      "visual_effect": "no_visible_change",
+      "scope": "historical reference and build only; not a verdict for a new preset"
+    },
+    "tested_channels": [
+      "R"
+    ]
   }
 ]
