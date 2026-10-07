@@ -2,6 +2,11 @@
 
 The local tool already inspects and compares CHF v7/v8 files and exports narrow DNA or material experiments. The next work is ordered by evidence needed, rather than by UI size.
 
+[Save monitoring](SAVE_MONITOR.md) now automates stable-save snapshots, field diffs
+and user-labelled candidate associations, with optional local foreground-game
+captures. Actual game-window capture remains to be verified on the target machine;
+pixel variation does not identify a slider or validate anatomy.
+
 The [2026-10-07 offline revalidation](MAPPING_REVALIDATION.md) authenticated historical pairs and captures, added two bounded dye-color observations, and documented provenance gaps. The remaining priorities below concern new game evidence and wider scope; repeating an archive inspection cannot supply those results.
 
 The [validation status](VALIDATION_STATUS.md) now distinguishes UI mapping, loading, saving and visual results for every catalog observation. Guided material filters and separate status labels are implemented, as are Zstandard environment/Python-location detection and a native roundtrip check. The accepted installed presets have been identified under renamed filenames. New game observations and a broader set of proven controls remain pending; phase two is deferred.

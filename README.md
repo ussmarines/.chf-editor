@@ -36,6 +36,7 @@ The application runs locally on Windows, preserves the original input, refuses t
 | --- | --- |
 | Explore a Star Citizen character preset | View its structure, DNA regions, ItemPorts, materials, and available evidence in the GUI. |
 | Compare two CHF files | Inspect logical differences with the `diff` command or GUI. |
+| Monitor game saves | Watch a selected CHF or new saves in its folder, archive diffs, and optionally capture the foreground game window locally. See [save monitoring](docs/SAVE_MONITOR.md). |
 | Test a DNA change | Change one weight and balance it with another weight in the same region. |
 | Test a material change | Change one existing float or color component with an exact source SHA-256 guard. |
 | Validate an export | Check size, CRC32C, Zstandard bounds, v7/v8 structure, and the expected logical diff; re-read the result independently. |
