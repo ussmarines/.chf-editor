@@ -6,6 +6,13 @@ The [2026-10-07 offline revalidation](MAPPING_REVALIDATION.md) authenticated his
 
 The [validation status](VALIDATION_STATUS.md) now distinguishes UI mapping, loading, saving and visual results for every catalog observation. Guided material filters and separate status labels are implemented, as are Zstandard environment/Python-location detection and a native roundtrip check. The accepted installed presets have been identified under renamed filenames. New game observations and a broader set of proven controls remain pending; phase two is deferred.
 
+Owner acceptance of the six positive screenshot-backed material effects is
+**closed as VALIDATED** on 2026-10-07. Do not request the same visual approval
+again unless the tested rendering/context changes or a new defect is reported.
+The priorities below concern new candidates, missing evidence and wider scope.
+The optional [REA investigation skill](REA_REVIEW.md) supplies an evidence method;
+it is not a CHF parser, an anatomy oracle or a replacement for BioCorp tests.
+
 1. **Validate each new candidate in the target game build.** Record four separate outcomes: structural validity, BioCorp loading, BioCorp saving, and visible effect. Include the build, source and output hashes, and comparable captures in private records. Existing results from another candidate or build do not transfer automatically.
 2. **Collect controlled saves for more UI controls.** Save a baseline and a second file after exactly one gesture. Inspect the logical diff. If several fields change, document the group and isolate individual roles through another controlled experiment. Repeat on female and male presets where the claim is meant to cover both.
 3. **Grow the evidence catalog only within proven scope.** Record source revisions, game build, structural selector, observed effect, and unresolved ambiguity. Keep private CHF files and captures out of Git.

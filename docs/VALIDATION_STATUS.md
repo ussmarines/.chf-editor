@@ -4,17 +4,34 @@ Snapshot: 2026-10-07. Historical observations concern LIVE `4.10.193.11644`, Bio
 
 ## Material observations
 
+### Owner visual acceptance, 2026-10-07
+
+The owner accepts the effects already validated through screenshots. The six
+capture-backed positive catalog observations below are **VALIDATED by owner**:
+freckles opacity, female hair pigment, male hair pigment, male beard/moustache
+pigment, male eyebrow pigment, and the female root-dye red channel. Their catalog
+status is `owner_validated_capture`, also displayed by the GUI. This closes visual
+acceptance for those historical references, not for an arbitrary matching preset.
+
+The captured negative secondary-dye observation is accepted as a negative result,
+not promoted to a usable color control. Ambiguous effects, DNA observations
+without comparable captures, and newly prepared candidates keep their current
+status. Loading, saving, UI mapping and channel restrictions remain independent;
+in particular, accepting the root-dye capture does not authenticate its malformed
+re-save fingerprint. The already accepted private character exports stay accepted
+and unchanged. No new game session or screenshot is claimed by this decision.
+
 | Observation | UI-to-field mapping | Loading | Game saving | Visible effect |
 | --- | --- | --- | --- | --- |
-| Freckles Opacity | Female controlled UI pair isolates the float; male tested through a variant | Historically reported for female/male | Authenticated copies retain the tested value | Supported by historical female/male captures |
+| Freckles Opacity | Female controlled UI pair isolates the float; male tested through a variant | Historically reported for female/male | Authenticated copies retain the tested value | VALIDATED by owner from historical female/male captures |
 | Female hair Dye Amount | UI pair changes a group including the float and small color differences | Historically reported | Authenticated copy retains the tested float | Not isolated |
 | Female hair Natural Color Variation | Bounded UI association after refreshing the Color panel | Historically reported | No authenticated roundtrip for the exact UI observation | Not isolated; immediate post-import slider readings were stale |
-| Female hair BaseMelanin | UI pair changes a group; isolated float experiment supports its effect | Historically reported | Authenticated copy retains the value | Light hair in reviewed historical captures |
-| Male hair BaseMelanin | Isolated float experiment; exact UI gesture not isolated | Historically reported | Authenticated copy retains the value | Light hair with dark beard in historical captures |
-| Male beard/moustache BaseMelanin | Isolated float experiment; exact UI gesture not isolated | Historically reported | Authenticated copy retains the value | Light beard/moustache with dark hair in historical captures |
-| Male eyebrow BaseMelanin | Isolated float experiment; exact UI gesture not isolated | Historically reported | Authenticated copy retains the value | Light brows in historical captures |
-| Female root-dye color, material 3, red byte | UI pair changes two copies; one-byte experiment isolates this occurrence | Historically reported | Recorded re-save hash malformed; association unauthenticated | Burgundy hair in authenticated historical capture; only R was isolated |
-| Secondary dye-color copy, material 5, red byte | Exact BioCorp control not established | Historically reported | Authenticated copy resets the byte | Negative observation: no visible change reported; not a usable validated color control |
+| Female hair BaseMelanin | UI pair changes a group; isolated float experiment supports its effect | Historically reported | Authenticated copy retains the value | VALIDATED by owner: light hair in historical captures |
+| Male hair BaseMelanin | Isolated float experiment; exact UI gesture not isolated | Historically reported | Authenticated copy retains the value | VALIDATED by owner: light hair with dark beard in historical captures |
+| Male beard/moustache BaseMelanin | Isolated float experiment; exact UI gesture not isolated | Historically reported | Authenticated copy retains the value | VALIDATED by owner: light beard/moustache with dark hair in historical captures |
+| Male eyebrow BaseMelanin | Isolated float experiment; exact UI gesture not isolated | Historically reported | Authenticated copy retains the value | VALIDATED by owner: light brows in historical captures |
+| Female root-dye color, material 3, red byte | UI pair changes two copies; one-byte experiment isolates this occurrence | Historically reported | Recorded re-save hash malformed; association unauthenticated | VALIDATED by owner: burgundy hair in historical capture; only R was isolated |
+| Secondary dye-color copy, material 5, red byte | Exact BioCorp control not established | Historically reported | Authenticated copy resets the byte | Accepted negative observation: no visible change reported; not a usable validated color control |
 
 The public catalog has **9 material observations**, including a negative result. It does not have nine universally validated controls. Numeric values remain raw CHF values; no general slider percentages or safe visual ranges have been established.
 
@@ -55,6 +72,20 @@ No new game validation was performed in this session: Star Citizen was not runni
 A private test bundle was prepared from the two authenticated active presets: six candidates per sex, each based on its unchanged baseline. It isolates FrecklesOpacity, FrecklesAmount, SunSpotsOpacity, SunSpotsAmount, BaseMelanin, or two balanced Nose weights. All 12 candidates pass the guarded writer, exact raw-payload and opaque-container preservation checks, single-frame Zstandard checking, and independent parsing with StarBreaker binary `0.3.2`. These are prepared experiments, not new game observations; no candidate was installed into the game directory.
 
 Prioritize female/male paired tests for freckles and sun spots, hair pigment under controlled dye state, and balanced DNA weights. Preserve the baseline; import each candidate, refresh the measured panel, capture the same view and lighting, save a new copy without another gesture, compare the result, then reload that saved copy. Record loading, saving, value retention and visible effect separately. Do not infer a field's role merely because BioCorp retains its value.
+
+## Local native-library validation, 2026-10-07
+
+An existing Zstandard `1.5.7` library passed the runtime version/API check and
+actual compression/decompression roundtrip. With `CHF_ZSTD_DLL` configured for
+the invocation, all three native-library tests passed without a skip. The full
+local suite then passed 16 tests with the female private baseline and 16 with
+the male baseline, with no skips in either run. This is offline library/export
+evidence, not a new game load, save, screenshot or anatomical mapping.
+
+The machine-specific launcher remains under ignored `outputs/local-runtime/`;
+it restores the caller's environment and working directory after execution.
+No DLL download, binary vendoring or global environment modification was needed.
+See [native-library setup and tests](TOOLCHAIN.md#native-library-tests).
 
 ## Guided editing
 

@@ -21,6 +21,7 @@ VALIDATION_LABELS = {
     "authenticated_reset": "authenticated saved value reset",
     "not_authenticated": "not authenticated",
     "capture_supported": "supported by historical captures",
+    "owner_validated_capture": "VALIDATED by owner from historical captures",
     "reported_change": "user-reported change",
     "no_visible_change": "no visible change observed",
     "no_clear_change": "no clear change observed",
