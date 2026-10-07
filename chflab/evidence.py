@@ -39,12 +39,19 @@ def material_evidence(record):
                                 "build": item["build"],
                                 "scope": "matching structural context; verify the effect on this file",
                                 "source": PUBLIC_SOURCE,
+                                "validation": dict(item.get("validation", {})),
+                                "tested_channels": item.get("tested_channels", []),
                             })
+    positive = sum(m["validation"].get("visual_effect") in ("capture_supported", "reported_change") for m in matches)
+    negative = sum(m["validation"].get("visual_effect") in ("no_visible_change", "no_clear_change") for m in matches)
     return {"matched_fields": matches,
             "record_caveats": [],
             "unknown_field_occurrences": total - len(matches),
+            "historical_visual_change_matches": positive,
+            "historical_negative_matches": negative,
+            "without_historical_visual_change": total - positive,
             "total_field_occurrences": total,
-            "note": "Other occurrences remain unknown. A hash label alone does not prove an effect."}
+            "note": "Counts describe matching historical observations, not validation of this file. Unknown means no matching observation; negative and inconclusive observations are not positive visual validations."}
 
 
 def dna_evidence(record):
@@ -71,6 +78,7 @@ def dna_evidence(record):
             "build": item["build"],
             "scope": "matching DNA signature; verify the effect on this file",
             "source": PUBLIC_SOURCE,
+            "validation": dict(item.get("validation", {})),
         })
     return {
         "matched_evidence": matches,
@@ -83,3 +91,24 @@ def dna_evidence(record):
 
 def evidence_report(record):
     return {"dna": dna_evidence(record), "materials": material_evidence(record)}
+
+
+def material_options(record, mode="Catalog observations"):
+    """Guided choices require an exact catalog selector; names alone do not qualify."""
+    if mode not in ("Catalog observations", "Observed visual changes", "All raw parameters"):
+        raise ValueError("Unknown material filter")
+    matches = {m["path"]: m for m in material_evidence(record)["matched_fields"]}
+    options = []
+    for mi, material in enumerate(record["material_definitions"]):
+        for si, sub in enumerate(material["submaterials"]):
+            for field, kind in (("floats", "float"), ("colors", "color")):
+                for pi, entry in enumerate(sub[field]):
+                    path = f"material_definitions[{mi}].submaterials[{si}].{field}[{pi}]"
+                    match = matches.get(path)
+                    if mode != "All raw parameters" and match is None:
+                        continue
+                    if mode == "Observed visual changes" and match["validation"].get("visual_effect") not in ("capture_supported", "reported_change"):
+                        continue
+                    options.append({"coordinates": (mi, si, kind, pi), "entry": entry,
+                                    "evidence": match, "path": path})
+    return options

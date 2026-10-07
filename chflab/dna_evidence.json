@@ -11,7 +11,14 @@
       "gender_hash": "54ebf49e",
       "variant_hash": "6e5bd869"
     },
-    "source": "docs/EXPERIMENTS.md#published-evidence-catalog"
+    "source": "docs/EXPERIMENTS.md#published-evidence-catalog",
+    "validation": {
+      "ui_mapping": "confirmed_for_reference",
+      "game_load": "historical_report",
+      "game_save": "documented_game_save",
+      "visual_effect": "reported_change",
+      "scope": "historical reference and build only; not a verdict for a new preset"
+    }
   },
   {
     "id": "female-nose-balanced-weights",
@@ -25,7 +32,14 @@
       "gender_hash": "54ebf49e",
       "variant_hash": "6e5bd869"
     },
-    "source": "docs/EXPERIMENTS.md#published-evidence-catalog"
+    "source": "docs/EXPERIMENTS.md#published-evidence-catalog",
+    "validation": {
+      "ui_mapping": "not_isolated",
+      "game_load": "historical_report",
+      "game_save": "authenticated_retained",
+      "visual_effect": "reported_change",
+      "scope": "historical reference and build only; not a verdict for a new preset"
+    }
   },
   {
     "id": "female-lower-lip-ui",
@@ -39,7 +53,14 @@
       "gender_hash": "54ebf49e",
       "variant_hash": "6e5bd869"
     },
-    "source": "docs/EXPERIMENTS.md#published-evidence-catalog"
+    "source": "docs/EXPERIMENTS.md#published-evidence-catalog",
+    "validation": {
+      "ui_mapping": "confirmed_for_reference",
+      "game_load": "historical_report",
+      "game_save": "documented_game_save",
+      "visual_effect": "reported_change",
+      "scope": "historical reference and build only; not a verdict for a new preset"
+    }
   },
   {
     "id": "female-mouth-balanced-weights",
@@ -53,7 +74,14 @@
       "gender_hash": "54ebf49e",
       "variant_hash": "6e5bd869"
     },
-    "source": "docs/EXPERIMENTS.md#published-evidence-catalog"
+    "source": "docs/EXPERIMENTS.md#published-evidence-catalog",
+    "validation": {
+      "ui_mapping": "not_isolated",
+      "game_load": "historical_report",
+      "game_save": "authenticated_retained",
+      "visual_effect": "no_clear_change",
+      "scope": "historical reference and build only; not a verdict for a new preset"
+    }
   },
   {
     "id": "female-eye-linked-ui",
@@ -70,6 +98,13 @@
       "gender_hash": "54ebf49e",
       "variant_hash": "6e5bd869"
     },
-    "source": "docs/EXPERIMENTS.md#published-evidence-catalog"
+    "source": "docs/EXPERIMENTS.md#published-evidence-catalog",
+    "validation": {
+      "ui_mapping": "group_only",
+      "game_load": "historical_report",
+      "game_save": "documented_game_save",
+      "visual_effect": "no_clear_change",
+      "scope": "historical reference and build only; not a verdict for a new preset"
+    }
   }
 ]

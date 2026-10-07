@@ -7,10 +7,24 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
 from chf import inspect_file, structural_diff, variant, variant_param
-from chflab.evidence import evidence_report
+from chflab.evidence import evidence_report, material_options
+from chflab.zstd_runtime import discover_zstd, resolve_zstd, check_zstd
 
 KNOWN_NAMES = json.loads((Path(__file__).parent / "chflab" / "known_names.json").read_text(encoding="utf-8"))
 KNOWN_GUIDS = json.loads((Path(__file__).parent / "chflab" / "known_guids.json").read_text(encoding="utf-8"))
+VALIDATION_LABELS = {
+    "confirmed_for_reference": "isolated on the reference",
+    "group_only": "associated with a group of fields",
+    "not_isolated": "not isolated",
+    "historical_report": "historically reported",
+    "authenticated_retained": "authenticated saved value retained",
+    "authenticated_reset": "authenticated saved value reset",
+    "not_authenticated": "not authenticated",
+    "capture_supported": "supported by historical captures",
+    "reported_change": "user-reported change",
+    "no_visible_change": "no visible change observed",
+    "no_clear_change": "no clear change observed",
+}
 
 
 def cig_display(raw_hex):
@@ -61,11 +75,18 @@ class App(tk.Tk):
         self.material_channel = tk.StringVar(value="R")
         self.material_control = tk.StringVar(value="raw material parameter")
         self.material_choices = []
+        self.material_matches = []
+        self.material_filter = tk.StringVar(value="Catalog observations")
+        self.material_status = tk.StringVar(value="Open a preset to see matching historical observations.")
+        self.dna_status = tk.StringVar(value="No DNA region selected")
         self.version = tk.StringVar(value="LIVE build to record")
         self.control = tk.StringVar(value="two balanced DNA weights")
         self.active = "female"
         self.records = {}
         self._layout()
+        candidates = discover_zstd()
+        if candidates:
+            self.dll.set(str(candidates[0]))
 
     def _row(self, parent, row, label, variable, chooser=None):
         ttk.Label(parent, text=label).grid(row=row, column=0, sticky="w", padx=5, pady=3)
@@ -79,6 +100,9 @@ class App(tk.Tk):
         top.columnconfigure(1, weight=1)
         self._row(top, 0, "Zstandard DLL", self.dll,
                   lambda: self.dll.set(filedialog.askopenfilename() or self.dll.get()))
+        ttk.Button(top, text="Detect / check", command=self._detect_dll).grid(row=0, column=3, padx=5)
+        self.dll_status = ttk.Label(top, text="Use a local DLL or CHF_ZSTD_DLL")
+        self.dll_status.grid(row=3, column=0, columnspan=4, sticky="w", padx=5)
         self._row(top, 1, "Female preset .chf", self.female,
                   lambda: self.female.set(filedialog.askopenfilename(filetypes=[("CHF", "*.chf")]) or self.female.get()))
         self._row(top, 2, "Male preset .chf", self.male,
@@ -104,39 +128,44 @@ class App(tk.Tk):
         for i in range(6):
             edit.columnconfigure(i, weight=1)
         ttk.Label(edit, text="Region").grid(row=0, column=0)
-        ttk.Combobox(edit, textvariable=self.part, values=("EyebrowLeft", "EyebrowRight", "EyeLeft", "EyeRight", "Nose", "EarLeft", "EarRight", "CheekLeft", "CheekRight", "Mouth", "Jaw", "Crown", "Neck"), state="readonly").grid(row=1, column=0, sticky="ew")
+        self.region_combo = ttk.Combobox(edit, textvariable=self.part, state="readonly")
+        self.region_combo.grid(row=1, column=0, sticky="ew")
+        self.region_combo.bind("<<ComboboxSelected>>", self._dna_selection_changed)
         ttk.Label(edit, text="Slot 0–3").grid(row=0, column=1)
-        ttk.Spinbox(edit, from_=0, to=3, textvariable=self.slot).grid(row=1, column=1, sticky="ew")
+        ttk.Spinbox(edit, from_=0, to=3, textvariable=self.slot, command=self._dna_selection_changed, state="readonly").grid(row=1, column=1, sticky="ew")
         ttk.Label(edit, text="Value 0–65535").grid(row=0, column=2)
         ttk.Entry(edit, textvariable=self.value).grid(row=1, column=2, sticky="ew")
         ttk.Label(edit, text="Balancing slot 0–3").grid(row=2, column=0, columnspan=2, sticky="w")
-        ttk.Spinbox(edit, from_=0, to=3, textvariable=self.balance_slot, width=5).grid(row=2, column=2, sticky="w")
+        ttk.Spinbox(edit, from_=0, to=3, textvariable=self.balance_slot, width=5, command=self._dna_selection_changed, state="readonly").grid(row=2, column=2, sticky="w")
         ttk.Label(edit, text="Game version").grid(row=0, column=3)
         ttk.Entry(edit, textvariable=self.version).grid(row=1, column=3, sticky="ew")
         ttk.Label(edit, text="Control being tested").grid(row=0, column=4)
         ttk.Entry(edit, textvariable=self.control).grid(row=1, column=4, sticky="ew")
         ttk.Button(edit, text="Export…", command=self.export).grid(row=1, column=5, padx=5)
-        ttk.Label(edit, text="head_id values remain unchanged; validate appearance in Star Citizen.").grid(row=3, column=0, columnspan=6, sticky="w", pady=4)
+        ttk.Label(edit, textvariable=self.dna_status, wraplength=1000).grid(row=3, column=0, columnspan=6, sticky="w", pady=4)
 
         material_edit = ttk.LabelFrame(self, text="Material variant: one raw parameter")
         material_edit.pack(fill="x", padx=10, pady=7)
         material_edit.columnconfigure(0, weight=5)
         material_edit.columnconfigure(2, weight=2)
-        ttk.Label(material_edit, text="Field present in the open preset (source-backed name)").grid(row=0, column=0, sticky="w")
+        filters = ttk.Combobox(material_edit, textvariable=self.material_filter,
+                              values=("Catalog observations", "Observed visual changes", "All raw parameters"), state="readonly")
+        filters.grid(row=0, column=0, sticky="ew", padx=5)
+        filters.bind("<<ComboboxSelected>>", self._material_filter_changed)
         self.material_combo = ttk.Combobox(material_edit, textvariable=self.material_field, state="readonly")
         self.material_combo.grid(row=1, column=0, sticky="ew", padx=5)
         self.material_combo.bind("<<ComboboxSelected>>", self._material_selection_changed)
         ttk.Label(material_edit, text="Color channel").grid(row=0, column=1)
-        channel = ttk.Combobox(material_edit, textvariable=self.material_channel,
+        self.channel_combo = ttk.Combobox(material_edit, textvariable=self.material_channel,
                                values=("R", "G", "B", "A"), state="readonly", width=5)
-        channel.grid(row=1, column=1, padx=5)
-        channel.bind("<<ComboboxSelected>>", self._material_selection_changed)
+        self.channel_combo.grid(row=1, column=1, padx=5)
+        self.channel_combo.bind("<<ComboboxSelected>>", self._material_selection_changed)
         ttk.Label(material_edit, text="New value (float or 0–255)").grid(row=0, column=2, sticky="w")
         ttk.Entry(material_edit, textvariable=self.material_value).grid(row=1, column=2, sticky="ew", padx=5)
         ttk.Button(material_edit, text="Export…", command=self.export_material).grid(row=1, column=3, padx=5)
         ttk.Label(material_edit, text="Control being tested / description").grid(row=2, column=0, sticky="w")
         ttk.Entry(material_edit, textvariable=self.material_control).grid(row=3, column=0, columnspan=3, sticky="ew", padx=5)
-        ttk.Label(material_edit, text="A field name does not identify its BioCorp control; see the evidence catalog.").grid(row=4, column=0, columnspan=4, sticky="w", pady=4)
+        ttk.Label(material_edit, textvariable=self.material_status, wraplength=1020).grid(row=4, column=0, columnspan=4, sticky="w", padx=5, pady=4)
 
     def _text_tab(self, name):
         frame = ttk.Frame(self.tabs)
@@ -154,6 +183,19 @@ class App(tk.Tk):
         if not 0 <= index < len(self.material_choices):
             return
         _, _, kind, _, entry = self.material_choices[index]
+        match = self.material_matches[index]
+        channels = match.get("tested_channels", []) if match and self.material_filter.get() != "All raw parameters" else []
+        self.channel_combo.configure(values=channels or ("R", "G", "B", "A"), state="readonly" if kind == "color" else "disabled")
+        if channels and self.material_channel.get() not in channels:
+            self.material_channel.set(channels[0])
+        if match:
+            validation = match["validation"]
+            labels = {axis: VALIDATION_LABELS.get(value, value) for axis, value in validation.items()}
+            self.material_control.set(match["control"])
+            self.material_status.set(f"Historical reference: UI {labels.get('ui_mapping', 'unknown')}; load {labels.get('game_load', 'unknown')}; save {labels.get('game_save', 'unknown')}; visual {labels.get('visual_effect', 'unknown')}. {match['build']}. Verify on this preset; numeric values are raw, not BioCorp percentages.")
+        else:
+            self.material_control.set("raw material parameter")
+            self.material_status.set("No matching catalog observation: UI control, loading, saving and visual effect are not validated for this field. Raw source names are clues only.")
         if kind == "float":
             self.material_value.set(str(entry["value"]))
         else:
@@ -161,14 +203,15 @@ class App(tk.Tk):
 
     def _set_material_choices(self, record):
         self.material_choices = []
+        self.material_matches = []
         labels = []
-        for mi, material in enumerate(record["material_definitions"]):
-            for si, sub in enumerate(material["submaterials"]):
-                for field, kind in (("floats", "float"), ("colors", "color")):
-                    for pi, entry in enumerate(sub[field]):
-                        self.material_choices.append((mi, si, kind, pi, entry))
-                        name = KNOWN_NAMES.get(entry["name_hash"], "unknown")
-                        labels.append(f"material {mi} / submaterial {si} / {kind} {pi} / {name} [{entry['name_hash']}]")
+        for option in material_options(record, self.material_filter.get()):
+            mi, si, kind, pi = option["coordinates"]
+            entry, match = option["entry"], option["evidence"]
+            self.material_choices.append((mi, si, kind, pi, entry))
+            self.material_matches.append(match)
+            name = match["control"] if match else KNOWN_NAMES.get(entry["name_hash"], "unknown")
+            labels.append(f"{name} | material {mi} / sub {si} / {kind} {pi}")
         self.material_combo.configure(values=labels)
         if labels:
             self.material_combo.current(0)
@@ -176,11 +219,42 @@ class App(tk.Tk):
         else:
             self.material_field.set("")
             self.material_value.set("")
+            self.material_status.set("No fields match this filter. All raw parameters remain available; their effects are not established.")
+
+    def _material_filter_changed(self, _event=None):
+        if self.active in self.records:
+            self._set_material_choices(self.records[self.active])
+
+    def _dna_selection_changed(self, _event=None):
+        if self.active not in self.records:
+            return
+        record = self.records[self.active]
+        weights = record["face_parts"][self.part.get()]
+        slot, balance = self.slot.get(), self.balance_slot.get()
+        current = weights[slot][0]
+        self.value.set(str(current))
+        low, high = max(0, current + weights[balance][0] - 65535), min(65535, current + weights[balance][0])
+        matches = [m for m in evidence_report(record)["dna"]["matched_evidence"] if f"face_parts.{self.part.get()}" in m["path"].split(" + ")]
+        status = "Historical region observation; verify on this preset" if matches else "No matching UI-region evidence"
+        bounds = f"Balanced encoding range {low}..{high}" if slot != balance else "Choose a different balancing slot"
+        self.dna_status.set(f"{status}. Current weight {current}; total {sum(w for w, h in weights)}. {bounds}; anatomical direction unknown; head IDs stay unchanged.")
+
+    def _detect_dll(self):
+        try:
+            path = resolve_zstd(self.dll.get() or None)
+            result = check_zstd(path)
+            self.dll.set(str(path))
+            self.dll_status.configure(text=f"Zstandard {result['version']} — compression/decompression check PASS")
+        except (OSError, ValueError) as error:
+            self.dll_status.configure(text="Zstandard setup incomplete")
+            messagebox.showerror("Zstandard setup", str(error))
 
     def open(self, which):
         try:
             path = Path((self.female if which == "female" else self.male).get())
-            record = inspect_file(path, Path(self.dll.get()))
+            dll = resolve_zstd(self.dll.get() or None)
+            self.dll.set(str(dll))
+            record = inspect_file(path, dll)
             self.records[which] = record
             self.active = which
             self.state.configure(text=f"{which}: {record['sha256'][:12]}… — v{record['version']}")
@@ -190,9 +264,10 @@ class App(tk.Tk):
             self._show(self.materials, annotate_hashes(record["material_definitions"]))
             self._show(self.evidence, evidence_report(record))
             self._set_material_choices(record)
+            self.region_combo.configure(values=tuple(record["face_parts"]))
             if self.part.get() not in record["face_parts"]:
                 self.part.set(next(iter(record["face_parts"])))
-            self.value.set(str(record["face_parts"][self.part.get()][self.slot.get()][0]))
+            self._dna_selection_changed()
         except (OSError, ValueError, KeyError, IndexError) as error:
             messagebox.showerror("CHF rejected", str(error))
 
