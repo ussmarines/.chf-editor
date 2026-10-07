@@ -11,6 +11,7 @@ from pathlib import Path
 CATALOG = json.loads(Path(__file__).with_name("field_evidence.json").read_text(encoding="utf-8"))
 DNA_CATALOG = json.loads(Path(__file__).with_name("dna_evidence.json").read_text(encoding="utf-8"))
 PUBLIC_SOURCE = "docs/EXPERIMENTS.md#published-evidence-catalog"
+POSITIVE_VISUAL_STATUSES = ("capture_supported", "owner_validated_capture", "reported_change")
 
 
 def material_evidence(record):
@@ -42,7 +43,7 @@ def material_evidence(record):
                                 "validation": dict(item.get("validation", {})),
                                 "tested_channels": item.get("tested_channels", []),
                             })
-    positive = sum(m["validation"].get("visual_effect") in ("capture_supported", "reported_change") for m in matches)
+    positive = sum(m["validation"].get("visual_effect") in POSITIVE_VISUAL_STATUSES for m in matches)
     negative = sum(m["validation"].get("visual_effect") in ("no_visible_change", "no_clear_change") for m in matches)
     return {"matched_fields": matches,
             "record_caveats": [],
@@ -107,7 +108,7 @@ def material_options(record, mode="Catalog observations"):
                     match = matches.get(path)
                     if mode != "All raw parameters" and match is None:
                         continue
-                    if mode == "Observed visual changes" and match["validation"].get("visual_effect") not in ("capture_supported", "reported_change"):
+                    if mode == "Observed visual changes" and match["validation"].get("visual_effect") not in POSITIVE_VISUAL_STATUSES:
                         continue
                     options.append({"coordinates": (mi, si, kind, pi), "entry": entry,
                                     "evidence": match, "path": path})

@@ -46,6 +46,11 @@ The tool does not render characters, compose complete character recipes, automat
 
 The catalog records **9 material observations and 5 DNA observations** on historical references in LIVE `4.10.193.11644`. Validation is specific to the tested preset, field context and build.
 
+On 2026-10-07, the owner **validated the six positive screenshot-backed material
+effects** on those references. The catalog and GUI record that acceptance without
+promoting ambiguous or negative results, or transferring it to a new preset.
+See [validation status](docs/VALIDATION_STATUS.md#owner-visual-acceptance-2026-10-07).
+
 | Evidence | Current status |
 | --- | --- |
 | Freckles opacity; hair, beard and eyebrow melanin | Historical visible effects and authenticated saved values in the tested contexts. |

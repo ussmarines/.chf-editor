@@ -34,13 +34,31 @@ None of the agent tools below are required to run CHF Editor. They are not inclu
 | Context7 MCP | Agent instruction to consult current library and API documentation. | [upstash/context7](https://github.com/upstash/context7) |
 | Graphify | Optional local code navigation; no hook or watcher is installed by this repository. | [Graphify-Labs/graphify](https://github.com/Graphify-Labs/graphify) |
 
-The fork **does** include two project-local skills: [`chf-editor`](../.agents/skills/chf-editor/SKILL.md) for navigation and [`chf-structural-variant`](../.agents/skills/chf-structural-variant/SKILL.md) for bounded edits. Their source and scope are documented in [the archive integration note](STARFALL_ARCHIVE_IMPORT.md). Install an agent that understands project-local `SKILL.md` files if you want to invoke them; the Python application does not depend on an agent.
+The fork **does** include three project-local skills: [`chf-editor`](../.agents/skills/chf-editor/SKILL.md) for navigation, [`chf-structural-variant`](../.agents/skills/chf-structural-variant/SKILL.md) for bounded edits, and the optional [`reverse-engineer-anything`](../.agents/skills/reverse-engineer-anything/SKILL.md) investigation instructions. The first two are documented in [the archive integration note](STARFALL_ARCHIVE_IMPORT.md); REA's pinned source, MIT notice and restricted use are in [its review](REA_REVIEW.md). REA's CLI, MCP server and analysis engines are not installed or bundled. Install an agent that understands project-local `SKILL.md` files if you want to invoke them; the Python application does not depend on an agent.
 
 Get a compatible native Zstandard library from the [official Zstandard source and releases](https://github.com/facebook/zstd/releases). Supply its DLL path explicitly; this repository does not download or bundle third-party binaries. No Python framework or pip package is needed for the current application.
 
 Alternatively, set `CHF_ZSTD_DLL` once in your shell and omit `--zstd-dll`. The GUI's **Detect / check** button checks required exports and a real compression/decompression roundtrip, and displays the loaded library version. Detection searches the environment and standard Python executable/DLL/library locations; it does not recursively scan the computer or install a library. An invalid explicit or environment path is rejected rather than silently replaced. The version function and compression API are documented in the [official Zstandard manual](https://facebook.github.io/zstd/zstd_manual.html); Tkinter selection handling follows the [Python ttk documentation](https://docs.python.org/3/library/tkinter.ttk.html).
 
 The public repository intentionally omits the local `brain/` pages because they contain private experiment provenance. To use Project Brain in a fork, obtain the skills from the upstream repository, then run `node <brain-page-skill>/bin/brain.mjs init` from your fork's root and create your own pages. The application works without this agent workflow.
+
+## Native-library tests
+
+The native roundtrip test needs `CHF_ZSTD_DLL` in the test process environment;
+otherwise its `SKIPPED` result means the library was not configured, not that
+Zstandard is broken. An existing compatible library is sufficient. In PowerShell:
+
+```powershell
+$env:CHF_ZSTD_DLL = 'C:\path\to\libzstd.dll'
+python -m unittest discover -s tests -p test_zstd_runtime.py -v
+```
+
+The command must finish with three tests passing and no skipped native check.
+For full private-fixture tests, also provide `CHF_TEST_SOURCE` for the selected
+local female or male reference, then run `python -m unittest discover -s tests -v`.
+Keep machine-specific launchers/configuration under ignored `outputs/`, scope
+environment changes to that invocation and restore previous values afterwards.
+Do not modify global environment settings or unrelated projects to configure CHF.
 
 ## GitHub features in a fork
 

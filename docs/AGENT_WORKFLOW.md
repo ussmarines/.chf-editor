@@ -18,3 +18,12 @@ The current CLI does not provide `agent-context`, `agent-choices`, `compose`, or
 Do not send character files, reference images, captures, or experiment manifests to a remote agent or commit them to Git. The public evidence catalog contains bounded summaries, not the private source files or their SHA-256 fingerprints. Its mappings are specific to their recorded structural context and do not establish the same effect on another preset. See [the experiment protocol](EXPERIMENTS.md#published-evidence-catalog).
 
 An image can guide a hypothesis but cannot directly determine CHF values. No faithful standalone 3D preview is provided.
+
+## Optional binary investigation
+
+The project-local REA skill is an optional evidence-driven investigation guide,
+not a runtime dependency. Its [review and limits](REA_REVIEW.md) explain when it
+helps. Use normal project tools for source analysis, CHF parsing and screenshot
+acceptance. Binary/runtime access, installation of external engines and MCP
+configuration are separate operations requiring an explicit relevant scope.
+Character evidence and accepted results belong here, not in SpaceShooter.

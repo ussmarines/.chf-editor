@@ -3,6 +3,7 @@ from copy import deepcopy
 import unittest
 
 from chflab.evidence import material_options, material_evidence, CATALOG, DNA_CATALOG
+from gui import VALIDATION_LABELS
 
 
 class GuidedTest(unittest.TestCase):
@@ -39,3 +40,33 @@ class GuidedTest(unittest.TestCase):
             self.assertEqual(set(item["validation"]),
                              {"ui_mapping", "game_load", "game_save", "visual_effect", "scope"})
             self.assertIn("historical", item["validation"]["scope"])
+
+    def test_owner_acceptance_is_limited_to_six_capture_backed_effects(self):
+        accepted = {item["id"] for item in CATALOG
+                    if item["validation"]["visual_effect"] == "owner_validated_capture"}
+        self.assertEqual(accepted, {
+            "freckles-opacity-female", "female-hair-base-melanin",
+            "male-hair-base-melanin", "male-beard-base-melanin",
+            "male-brow-base-melanin", "female-hair-root-dye-red-channel",
+        })
+        self.assertIn("VALIDATED by owner", VALIDATION_LABELS["owner_validated_capture"])
+        by_id = {item["id"]: item for item in CATALOG}
+        root_dye = by_id["female-hair-root-dye-red-channel"]
+        self.assertEqual(root_dye["validation"]["game_save"], "not_authenticated")
+        self.assertEqual(root_dye["validation"]["ui_mapping"], "group_only")
+        self.assertEqual(root_dye["tested_channels"], ["R"])
+        for item_id in ("female-hair-dye-amount", "female-hair-variation"):
+            self.assertEqual(by_id[item_id]["validation"]["visual_effect"], "not_isolated")
+        self.assertEqual(by_id["female-secondary-hair-dye-copy-negative"]
+                         ["validation"]["visual_effect"], "no_visible_change")
+        self.assertFalse(any(item["validation"]["visual_effect"] == "owner_validated_capture"
+                             for item in DNA_CATALOG))
+
+    def test_owner_validated_effect_remains_in_guided_filter_and_counts(self):
+        record = self.reference()
+        match = material_options(record, "Observed visual changes")[0]["evidence"]
+        self.assertEqual(match["validation"]["visual_effect"], "owner_validated_capture")
+        self.assertIn("verify the effect on this file", match["scope"])
+        counts = material_evidence(record)
+        self.assertEqual(counts["historical_visual_change_matches"], 1)
+        self.assertEqual(counts["historical_negative_matches"], 1)

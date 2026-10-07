@@ -17,6 +17,8 @@ Read the repository's `AGENTS.md` and the current source before acting. Load onl
 - Controlled UI-save pair: [`docs/CONTROLLED_GAME_PAIR.md`](../../../docs/CONTROLLED_GAME_PAIR.md).
 - Published evidence and limitations: [`docs/EXPERIMENTS.md`](../../../docs/EXPERIMENTS.md).
 - Runtime dependencies and upstream revisions: [`docs/TOOLCHAIN.md`](../../../docs/TOOLCHAIN.md).
+- Owner-accepted visual observations and remaining tests: [`docs/VALIDATION_STATUS.md`](../../../docs/VALIDATION_STATUS.md).
+- Optional shipped-binary investigation with REA: [`docs/REA_REVIEW.md`](../../../docs/REA_REVIEW.md). Do not run REA for ordinary source edits or screenshot acceptance, or treat its instructions as permission to access the game or install external tools.
 
 Use [`chflab/inspector.py`](../../../chflab/inspector.py) for read-only structural inspection and [`chf.py`](../../../chf.py) for currently supported controlled variants. The former SpaceShooter v3-v14 scripts are donor-specific historical experiments and are not the writer for new files.
 
