@@ -1,27 +1,58 @@
-# CHF Editor
+# CHF Editor — Star Citizen Character Preset Inspector & Controlled Editor
 
-**Inspect, compare, and make controlled changes to Star Citizen character presets.**
+[![Python](https://img.shields.io/badge/Python-3.x-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Platform](https://img.shields.io/badge/platform-Windows-0078D4?logo=windows11&logoColor=white)](#requirements)
+[![Star Citizen CHF](https://img.shields.io/badge/Star%20Citizen-CHF%20v7%2Fv8-111827)](#what-you-can-do)
+[![Changed files](https://github.com/ussmarines/.chf-editor/actions/workflows/changed-files.yml/badge.svg)](https://github.com/ussmarines/.chf-editor/actions/workflows/changed-files.yml)
+[![License](https://img.shields.io/badge/license-PolyForm%20Noncommercial%201.0.0-2563EB)](LICENSE)
 
-CHF Editor is a local Python application for `.chf` v7/v8 files. It offers a graphical interface and a command-line tool for examining a preset, comparing two saves, and creating a narrowly scoped experiment. It does not include character presets or game assets.
+**Inspect, diff, validate, and make narrowly scoped changes to Star Citizen `.chf` character presets (v7/v8) with a local Python GUI and CLI.**
+
+CHF Editor is a public-source **Star Citizen character preset tool** for examining `.chf` files, comparing character DNA presets, exploring DNA regions and weights, inspecting ItemPorts and materials, and creating controlled variants. It is designed for reproducible technical investigation rather than blind preset rewriting.
+
+The application runs locally on Windows, preserves the original input, refuses to overwrite an existing output, and does **not** include character presets, extracted game files, or game assets.
+
+> [!NOTE]
+> CHF Editor is an unofficial community project and is not affiliated with or endorsed by Cloud Imperium Games.
 
 > [!IMPORTANT]
 > A structurally valid file is not proof that Star Citizen will load it, save it, or show the intended visual change. Test those outcomes separately in the game.
+
+## At a glance
+
+| | |
+| --- | --- |
+| **Game / format** | Star Citizen character presets, CHF v7/v8 |
+| **Interfaces** | Tkinter GUI and Python CLI |
+| **Core workflows** | Inspect, compare/diff, controlled DNA variants, controlled material variants, validation |
+| **Platform** | Windows |
+| **Compression** | Zstandard through a compatible native `libzstd.dll` |
+| **Data model** | Local-first; bring your own legally obtained `.chf` files |
+| **License** | PolyForm Noncommercial License 1.0.0 |
 
 ## What you can do
 
 | Task | Available now |
 | --- | --- |
-| Explore a preset | View its structure, DNA regions, ItemPorts, materials, and available evidence in the GUI. |
-| Compare two saves | Inspect their logical differences with the `diff` command or GUI. |
+| Explore a Star Citizen character preset | View its structure, DNA regions, ItemPorts, materials, and available evidence in the GUI. |
+| Compare two CHF files | Inspect logical differences with the `diff` command or GUI. |
 | Test a DNA change | Change one weight and balance it with another weight in the same region. |
 | Test a material change | Change one existing float or color component with an exact source SHA-256 guard. |
 | Validate an export | Check size, CRC32C, Zstandard bounds, v7/v8 structure, and the expected logical diff; re-read the result independently. |
 
-The tool preserves the original input and refuses to overwrite an existing output. It does not render characters, compose complete recipes, or infer the visual meaning of an unverified field.
+The tool does not render characters, compose complete character recipes, automatically infer visual meaning from unverified fields, or act as a general-purpose save editor.
 
 ## Get started
 
-**Requirements:** Windows, Python 3, Tkinter for the GUI, and a compatible native Zstandard DLL (`libzstd.dll`) for CHF operations. Bring your own legally obtained `.chf` files; none are distributed here.
+### Requirements
+
+- Windows
+- Python 3
+- Tkinter for the GUI
+- A compatible native Zstandard DLL (`libzstd.dll`) for CHF operations
+- Your own legally obtained Star Citizen `.chf` character preset files
+
+Clone and launch the GUI:
 
 ```powershell
 git clone https://github.com/ussmarines/.chf-editor.git
@@ -55,6 +86,8 @@ Report four results independently: **file structure**, **loading in the game**, 
 
 Keep presets, manifests, screenshots, videos, and extracted game files private. Store local experiments under `outputs/`, which Git excludes. Review your changes before opening a pull request; automated checks look for common sensitive patterns in changed files but cannot detect everything.
 
+## Documentation
+
 | Guide | Purpose |
 | --- | --- |
 | [Controlled game comparison](docs/CONTROLLED_GAME_PAIR.md) | Make comparable before/after saves and captures. |
@@ -70,8 +103,12 @@ Keep presets, manifests, screenshots, videos, and extracted game files private. 
 
 ## Contribute
 
-Contributions are welcome. Open an issue for a proposal or submit a pull request with a focused change, relevant checks, and a clear description of evidence and limitations. Read the [contribution guide](CONTRIBUTING.md) before submitting. Please do not include private character files or personal data.
+Contributions are welcome: bug reports, documentation corrections, focused code changes, and reproducible findings about the CHF format.
+
+Open an issue for a proposal or submit a pull request with a focused change, relevant checks, and a clear description of evidence and limitations. Read the [contribution guide](CONTRIBUTING.md) before submitting. Please do not include private character files or personal data.
 
 ## License and support
 
-The code is available under the [PolyForm Noncommercial License 1.0.0](LICENSE). Contributions and forks must respect its noncommercial terms and preserve the required copyright and attribution notice. You may support the project through [PayPal](https://paypal.me/ussmarinesdot).
+The code is available under the [PolyForm Noncommercial License 1.0.0](LICENSE). Contributions and forks must respect its noncommercial terms and preserve the required copyright and attribution notice.
+
+You may support the project through [PayPal](https://paypal.me/ussmarinesdot).
