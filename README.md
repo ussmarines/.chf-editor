@@ -96,6 +96,7 @@ Keep presets, manifests, screenshots, videos, and extracted game files private. 
 | [Architecture](docs/ARCHITECTURE.md) | See the reader, evidence catalog, writer, and GUI boundaries. |
 | [Remaining work](docs/NEXT_STEPS.md) | Follow the phase-one validation and mapping priorities. |
 | [Experiments and evidence](docs/EXPERIMENTS.md) | Understand the published evidence and its limits. |
+| [Mapping revalidation](docs/MAPPING_REVALIDATION.md) | Review rechecked historical observations, source-label coverage, and provenance gaps. |
 | [Agent workflow](docs/AGENT_WORKFLOW.md) | Run bounded experiments with clear provenance. |
 | [Tools and skills](docs/TOOLCHAIN.md) | Find official sources and set up a fork. |
 | [Archive integration](docs/STARFALL_ARCHIVE_IMPORT.md) | See what was retained from the supplied Starfall research. |
