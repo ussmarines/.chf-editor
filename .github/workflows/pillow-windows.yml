@@ -1,0 +1,35 @@
+name: Pillow Windows capture compatibility
+
+on:
+  pull_request:
+    paths:
+      - "requirements-monitor.txt"
+      - "chflab/screen.py"
+      - ".github/workflows/pillow-windows.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pillow-windows:
+    runs-on: windows-latest
+    timeout-minutes: 12
+    steps:
+      - name: Check out public PR merge commit (no external action)
+        shell: pwsh
+        run: |
+          git init .
+          git remote add origin "$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY.git"
+          git fetch --no-tags --depth=1 origin "$env:GITHUB_SHA"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          git checkout --detach FETCH_HEAD
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Verify Python runtime
+        run: python --version
+      - name: Install optional capture dependency
+        run: python -m pip install --disable-pip-version-check -r requirements-monitor.txt
+      - name: Verify Pillow API and offline frame comparison
+        shell: pwsh
+        run: |
+          python -c "import PIL; from PIL import Image, ImageGrab; from chflab.screen import pixel_change, usable_frame; from inspect import signature; assert PIL.__version__ == '13.0.0'; assert 'window' in signature(ImageGrab.grab).parameters; a=Image.new('RGB',(4,4),(0,0,0)); b=a.copy(); b.putpixel((1,1),(255,0,0)); assert not usable_frame(a) and usable_frame(b); assert pixel_change(a,b) > 0; b.thumbnail((2,2)); assert b.size == (2,2); print('Pillow 13 Windows capture API and synthetic frames: PASS')"
