@@ -16,12 +16,17 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 12
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
-        with:
-          python-version: "3.12"
+      - name: Check out public PR merge commit (no external action)
+        shell: pwsh
+        run: |
+          git init .
+          git remote add origin "$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY.git"
+          git fetch --no-tags --depth=1 origin "$env:GITHUB_SHA"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          git checkout --detach FETCH_HEAD
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Verify Python runtime
+        run: python --version
       - name: Install optional capture dependency
         run: python -m pip install --disable-pip-version-check -r requirements-monitor.txt
       - name: Verify Pillow API and offline frame comparison
