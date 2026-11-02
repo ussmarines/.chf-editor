@@ -1,0 +1,30 @@
+name: Pillow Windows capture compatibility
+
+on:
+  pull_request:
+    paths:
+      - "requirements-monitor.txt"
+      - "chflab/screen.py"
+      - ".github/workflows/pillow-windows.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pillow-windows:
+    runs-on: windows-2025
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+      - name: Install optional capture dependency
+        run: python -m pip install --disable-pip-version-check -r requirements-monitor.txt
+      - name: Verify Pillow API and offline frame comparison
+        shell: pwsh
+        run: |
+          python -c "import PIL; from PIL import Image, ImageGrab; from chflab.screen import pixel_change, usable_frame; from inspect import signature; assert PIL.__version__ == '13.0.0'; assert 'window' in signature(ImageGrab.grab).parameters; a=Image.new('RGB',(4,4),(0,0,0)); b=a.copy(); b.putpixel((1,1),(255,0,0)); assert not usable_frame(a) and usable_frame(b); assert pixel_change(a,b) > 0; b.thumbnail((2,2)); assert b.size == (2,2); print('Pillow 13 Windows capture API and synthetic frames: PASS')"
